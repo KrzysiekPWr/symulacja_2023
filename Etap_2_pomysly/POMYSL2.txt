@@ -1,0 +1,25 @@
+POMYSŁ 2
+IMPLEMENTACJA W JAVIE
+SYMULACJA MRÓWEK/MROWISKA
+
+Ogólny pomysł wygląda tak:
+Na mapce dwuwymiarowej mamy x mrowisk. Mrówki zbierają jedzenie i to jego ilość
+będziemy śledzić w dla danego mrowiska.
+Mrówki mogą poruszać się po planszy w sposób losowy, gdy znajdą się w pobliżu jedzenia, zabierają je
+i wracają z nim do mrowiska, zostawiając za sobą wyparowujące po czasie feromony (spróbowalibyśmy zaimplementować
+algorytm mrówkowy).
+Gdy inna mrówka na nie natrafi, idzie ich śladem do pokarmu, wracając - również zostawiając ślad.
+Skupiska jedzenia pojawiają się losowo w określonym segmencie planszy. 
+Zaimplementujemy różne rodzaje mrówek:
+    mrówka atakująca - może atakować pozostałe mrówki, ale nie może zbierać jedzenia
+    mrówka robotnica - zbiera jedzonko
+    mrówka królowa - można potraktować ją jako spawner
+    mrówka latająca - też zbiera jedzenie, jest szybsza i unika mrówek atakujących
+
+Będziemy mieć różne gatunki mrówek, z różnymi cechami charakterystycznymi i atrybutami
+    zwykłe, czarne - będą miały więcej robotnic, a mniej wojowników
+    czerwone - w sumie to nie wiem
+    zielone - ginąc z łapki? mrówki wojownika zabiera ją ze sobą do grobu, w kolonii występują
+    tylko robotnice 
+
+Różne, zmieniające się efekty pogodowe, wpływające na elementy symulacji (może)
