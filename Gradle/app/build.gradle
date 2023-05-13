@@ -26,7 +26,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'gradle.App'
+    mainClass = 'gradle.Simulation'
 }
 
 tasks.named('test') {
