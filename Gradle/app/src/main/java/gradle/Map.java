@@ -30,6 +30,8 @@ class Map {
         this.map_area = new String[size][size];
     }
 
+    
+
     void showMap(){
 
         for (int i = 0; i < size; i++) {
@@ -39,7 +41,63 @@ class Map {
                 System.out.println();
             }
     }
+    
+    public void initializeMap(){
+        spawn_planets();
+        spawn_stars();
+        spawn_black_holes();
+    }
 
+    private void spawn_planets(){
+     
+        Random rand = new Random();
+
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                int chance_for_planet = rand.nextInt(1,101); //random int from 1 to 100
+                    if(chance_for_planet <= (int)(planetation*100)){
+                        map_area[x][y] = "P";
+                    }
+                    else{
+                        map_area[x][y] = "*";
+                    }
+                }
+        }
+    }
     
-    
+    private void spawn_stars(){
+
+        Random rand = new Random();
+        
+        int random_x, random_y;
+        for(int i = 0; i < stars_quantity; i++){
+            
+            random_x = rand.nextInt(1, size);
+            random_y = rand.nextInt(1, size);
+            
+            map_area[random_x][random_y] = "+"; 
+        }
+    }
+
+
+    /**
+     * 
+     * @param black_holes_quantity
+     * @param map
+     * @return Map
+     */
+    private void spawn_black_holes(){
+
+        Random rand = new Random();            
+
+        int random_x, random_y;
+        for(int i = 0; i < black_holes_quantity; i++){
+            do{
+            random_x = rand.nextInt(1, size);
+            random_y = rand.nextInt(1, size);
+            }while(map_area[random_x][random_y].equals("+"));
+            
+            map_area[random_x][random_y] = "O"; 
+        }
+    }
 }

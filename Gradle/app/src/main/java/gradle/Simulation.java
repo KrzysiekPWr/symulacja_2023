@@ -14,7 +14,7 @@ public class Simulation {
 
         Map map = new Map(0, 10, 1, 1, 1, 1);
 
-        map = simulationSetup.initializeMap(map);
+        map.initializeMap();
 
         map.showMap();
 
