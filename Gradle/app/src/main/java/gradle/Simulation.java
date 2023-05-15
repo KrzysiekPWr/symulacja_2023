@@ -12,12 +12,13 @@ public class Simulation {
         // Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         
 
-        Map map = new Map(0, 10, 1, 1, 1, 1);
+        Map map = new Map(0.1, 25, 5, 5, 1, 1);
 
         map.initializeMap();
-
+        //add civilizations to the planets1        
         map.showMap();
 
+        //executing simulation round
     }
 
 }

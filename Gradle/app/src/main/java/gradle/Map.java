@@ -6,6 +6,7 @@ import java.util.Random;
 
 
 class Map {
+    
     double planetation;
     int size;
     int stars_quantity;
@@ -14,7 +15,9 @@ class Map {
     int pacifistic_civilisation_quantity;
     List<pacifisticCivilization> civ_list = new ArrayList<>();
     List<pacifisticShip> ship_list = new ArrayList<>();
-    String[][] map_area;
+    objectInSpace map_area[][]; //idk if String should be here, maybe we should 
+                        //create map of objects that are in the space  
+                        //
 
     Map(){}
     
@@ -27,7 +30,7 @@ class Map {
         this.black_holes_quantity = black_holes_quantity;
         this.aggresive_civilisation_quantity = aggresive_civilisation_quantity;
         this.pacifistic_civilisation_quantity = pacifistic_civilisation_quantity;
-        this.map_area = new String[size][size];
+        this.map_area = new objectInSpace[size][size];
     }
 
     
@@ -36,7 +39,7 @@ class Map {
 
         for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    System.out.print(map_area[i][j] + " ");
+                    System.out.print(map_area[i][j].special_char + " ");
                 }
                 System.out.println();
             }
@@ -54,13 +57,18 @@ class Map {
 
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                int chance_for_planet = rand.nextInt(1,101); //random int from 1 to 100
+                int chance_for_planet = rand.nextInt(1,101); 
                     if(chance_for_planet <= (int)(planetation*100)){
-                        map_area[x][y] = "P";
+                        
+                        int initial_resources = rand.nextInt(0, 1000); // 
+                        Planet planet = new Planet(initial_resources, 0);
+                        map_area[x][y] = planet;
                     }
-                    else{
-                        map_area[x][y] = "*";
+                    else{ //creating empty spaces in map
+                        objectInSpace objectInSpace = new objectInSpace('.'); 
+                        map_area[x][y] = objectInSpace;                    
                     }
+                    
                 }
         }
     }
@@ -70,34 +78,38 @@ class Map {
         Random rand = new Random();
         
         int random_x, random_y;
-        for(int i = 0; i < stars_quantity; i++){
+
+        int i = 0;
+        while(i < stars_quantity){
             
-            random_x = rand.nextInt(1, size);
-            random_y = rand.nextInt(1, size);
+            random_x = rand.nextInt(0, size);
+            random_y = rand.nextInt(0, size);
             
-            map_area[random_x][random_y] = "+"; 
+            if(map_area[random_x][random_y].special_char != '+' 
+            && map_area[random_x][random_y].special_char != 'P')
+            {
+                Star star = new Star(1.5, 100);
+                map_area[random_x][random_y] = star; 
+                i++;
+            }
         }
     }
 
 
-    /**
-     * 
-     * @param black_holes_quantity
-     * @param map
-     * @return Map
-     */
+   
     private void spawn_black_holes(){
 
         Random rand = new Random();            
 
-        int random_x, random_y;
         for(int i = 0; i < black_holes_quantity; i++){
+            int random_x, random_y;
             do{
-            random_x = rand.nextInt(1, size);
-            random_y = rand.nextInt(1, size);
-            }while(map_area[random_x][random_y].equals("+"));
+            random_x = rand.nextInt(0, size);
+            random_y = rand.nextInt(0, size);
+            }while(map_area[random_x][random_y].special_char != '.');
             
-            map_area[random_x][random_y] = "O"; 
+            blackHole black_hole = new blackHole(2);
+            map_area[random_x][random_y] = black_hole; 
         }
     }
 }
