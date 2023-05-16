@@ -12,7 +12,7 @@ public class Simulation {
         // Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         
 
-        Map map = new Map(0.05, 10, 4, 4, 0, 3);
+        Map map = new Map(0.2, 10, 4, 4, 3, 0);
 
         //add civilizations to the planets1        
         map.initializeMap();

@@ -15,7 +15,7 @@ class Map {
     int pacifistic_civilisation_quantity;
     List<pacifisticCivilization> civ_list = new ArrayList<>();
     List<pacifisticShip> ship_list = new ArrayList<>();
-    List<Planet> planet_list = new ArrayList<>();
+    List<Planet> lifeless_planet_list = new ArrayList<>();
     objectInSpace map_area[][]; //idk if String should be here, maybe we should 
                         //create map of objects that are in the space  
                         //
@@ -119,7 +119,7 @@ class Map {
                         initial_resources = rand.nextInt(0, 1000); 
                         Planet planet = new Planet(initial_resources, 0);
                         map_area[x][y] = planet;
-                        planet_list.add(planet);
+                        lifeless_planet_list.add(planet);
                     } 
             }
         }
@@ -132,20 +132,22 @@ class Map {
         int random_index;
 
         for(int i = 0; i < (aggresive_civilisation_quantity 
-        + pacifistic_civilisation_quantity) + 1; i++){
+        + pacifistic_civilisation_quantity); i++){
             
-            random_index = rand.nextInt(0, planet_list.size());
+            random_index = rand.nextInt(0, lifeless_planet_list.size());
             
             if(i < pacifistic_civilisation_quantity){
                 
                 pacifisticCivilization pacCiv = new pacifisticCivilization(0, 10, 10);
                 civ_list.add(pacCiv);
-                pacCiv.planets_possesed_list.add(planet_list.get(random_index));
+                pacCiv.planets_possesed_list.add(lifeless_planet_list.get(random_index));
+                lifeless_planet_list.remove(random_index);
             }
             else{
                 aggressiveCivilization agrCiv = new aggressiveCivilization(0, 10, 10);
                 civ_list.add(agrCiv);
-                agrCiv.planets_possesed_list.add(planet_list.get(random_index));
+                agrCiv.planets_possesed_list.add(lifeless_planet_list.get(random_index));
+                lifeless_planet_list.remove(random_index);
             }
             
         }   
