@@ -2,7 +2,13 @@ package gradle;
 
 public class aggressiveCivilization extends pacifisticCivilization{
     
-    aggressiveCivilization(int resources, int mining_abilities, int ship_price){
-        super(resources, mining_abilities, ship_price);
+    aggressiveCivilization(int mining_abilities, int ship_price){
+        super(mining_abilities, ship_price);
     }
+
+    // @Override
+    // public void send_ship() {
+    //     // TODO Auto-generated method stub
+    //     super.send_ship();
+    // }
 }
