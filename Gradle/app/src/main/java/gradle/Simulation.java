@@ -12,19 +12,19 @@ public class Simulation {
         // Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         
         
-        Map map = new Map(0.1, 20, 2, 2, 2, 0);
+        Map map = new Map(0.05, 20, 2, 2, 2, 0);
 
-        //add civilizations to the planets1        
+               
         map.initialize_map();
 
-        for(int i = 0; i < 30; i++){
+        //executing simulation era
+        for(int i = 0; i < 5; i++) {
             map.mine_resources();
+            // map.spawn_ships();
+            //  map.move_ships();
+            // System.out.println();
             map.show_map();
-            map.spawn_ships();
-            map.move_ships();
-            System.out.println();
         }
-        //executing simulation round
         
         
         
