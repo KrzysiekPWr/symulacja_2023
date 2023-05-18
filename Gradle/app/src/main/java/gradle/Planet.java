@@ -1,9 +1,14 @@
 package gradle;
 
-public class Planet {
+public class Planet extends objectInSpace{
 
-    int initial_resources;
+    
+    int resources;
     int extracted_resources;
-    int x_dim;
-    int y_dim;
+
+    public Planet(int resources, int extracted_resources) {
+        super('p');
+        this.resources = resources;
+        this.extracted_resources = extracted_resources;
+    }
 }
