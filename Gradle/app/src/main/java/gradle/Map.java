@@ -2,6 +2,8 @@ package gradle;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -78,42 +80,47 @@ class Map {
         }
     }
 
-    private void add_closest_planets_vectors_lists_to_planets() {
+    public void add_closest_planets_vectors_lists_to_planets() { // MAKE PRIVATE AGAIN!!!!!!!!!!!!
 
         // for each planet searching 3 closest planets
         for (Planet planet : lifeless_planet_list) {
-            int[][] closest_planets_vectors_temp_list = new int[3][2];
-            int count_first_three_planets = 0;
+            List<Planet> closest_planets_list_temp = new ArrayList<>();
             
             //iterating throught all planets
-            for (Planet other_planet : lifeless_planet_list) {
-                if (planet != other_planet) {
-                    int x_vector = other_planet.x_dim - planet.x_dim;
-                    int y_vector = other_planet.y_dim - planet.y_dim;
+            for (Planet act_planet : lifeless_planet_list) {
+                if (planet != act_planet) {
+                    int x_vector = act_planet.x_dim - planet.x_dim;
+                    int y_vector = act_planet.y_dim - planet.y_dim;
     
-                    int distance = x_vector * x_vector + y_vector * y_vector;
+                    double distance = Math.sqrt(x_vector * x_vector + y_vector * y_vector);
                     
                     //assigning first 3 planets
-                    if (count_first_three_planets < 3) {
-                        closest_planets_vectors_temp_list[count_first_three_planets][0] = x_vector;
-                        closest_planets_vectors_temp_list[count_first_three_planets][1] = y_vector;
-                        count_first_three_planets++;
+                    if (closest_planets_list_temp.size() < 3) {
+                        closest_planets_list_temp.add(act_planet);
                     } 
                     else {
-                        //search for a planet with smaller distance than current and replace it
-                        for (int j = 0; j < 3; j++) {
-                            int current_distance = closest_planets_vectors_temp_list[j][0] * closest_planets_vectors_temp_list[j][0]
-                                    + closest_planets_vectors_temp_list[j][1] * closest_planets_vectors_temp_list[j][1];
-                            if (distance < current_distance) {
-                                closest_planets_vectors_temp_list[j][0] = x_vector;
-                                closest_planets_vectors_temp_list[j][1] = y_vector;
-                                break; 
-                            }
+                        //search for a planet with the biggest distance in closest_planets_list_temp
+                        double biggest_distance = -1;
+                        int biggest_distance_index = -1;
+                        for (Planet closest_planet : closest_planets_list_temp) {
+                                x_vector = closest_planet.x_dim - planet.x_dim;
+                                y_vector = closest_planet.y_dim - planet.y_dim;
+                                double distance_temp = Math.sqrt(x_vector * x_vector + y_vector * y_vector);
+
+                                if(distance_temp > biggest_distance){
+                                    biggest_distance = distance_temp;
+                                    biggest_distance_index = closest_planets_list_temp.indexOf(closest_planet);
+                                }
+                        }
+                        //check if actual distance is smaller than the biggest one in closest_planets_list_map
+                        //and replace it if it is
+                        if (distance < biggest_distance) {
+                            closest_planets_list_temp.set(biggest_distance_index, act_planet);
                         }
                     }
                 }
             }
-            planet.closest_planets_vectors_list = closest_planets_vectors_temp_list;
+            planet.closest_planets_list = closest_planets_list_temp;
         }
     }
     
@@ -131,7 +138,7 @@ class Map {
             }while(map_area[random_x][random_y] != null);
             
             blackHole black_hole = new blackHole(2);
-            map_area[random_x][random_y] = black_hole; 
+            map_area[random_x][random_y] = black_hole;
         }
     }
     
@@ -254,6 +261,6 @@ class Map {
     //             }
     //         }
     //     }
-    //}   
+    //}
 }
 

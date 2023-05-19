@@ -1,5 +1,8 @@
 package gradle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Planet implements emptySpace{
 
     
@@ -7,7 +10,7 @@ public class Planet implements emptySpace{
     int extracted_resources = 0;
     int x_dim;
     int y_dim;
-    int closest_planets_vectors_list[][] = new int[3][2];
+    List<Planet> closest_planets_list = new ArrayList<>();
 
     public Planet(int resources, int x_dim, int y_dim) {
         this.resources = resources;
