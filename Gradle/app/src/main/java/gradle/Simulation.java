@@ -16,12 +16,11 @@ public class Simulation {
 
                
         map.initialize_map();
-        // map.add_closest_planets_vectors_lists_to_planets();
 
         //executing simulation era
-        for(int i = 0; i < 1; i++) {
-            // map.mine_resources();
-            // map.spawn_ships();
+        for(int i = 0; i < 10; i++) {
+            map.mine_resources();
+            map.spawn_ships();
             //  map.move_ships();
             // System.out.println();
            map.show_map();

@@ -2,7 +2,7 @@ package gradle;
 
 public class pacifisticShip implements emptySpace {
     
-    int fuel;
+    int fuel; //shouldnt we move these three to civilisation class?
     int jump_cooldown;
     int speed;
     int x_dim;
@@ -20,6 +20,11 @@ public class pacifisticShip implements emptySpace {
     @Override
     public int getType() {
         return 2;
+    }
+
+    @Override
+    public String toString() {
+        return "^";
     }
 
 }

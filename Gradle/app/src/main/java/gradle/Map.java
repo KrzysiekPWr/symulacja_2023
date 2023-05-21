@@ -2,8 +2,6 @@ package gradle;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Random;
 
 
@@ -50,10 +48,9 @@ class Map {
     public void initialize_map() {
         
         spawn_planets();
-        add_closest_planets_vectors_lists_to_planets();
-        
         spawn_black_holes();
         spawn_stars();
+        add_closest_planets_vectors_lists_to_planets();
         add_civilizations();
     }
 
@@ -80,7 +77,7 @@ class Map {
         }
     }
 
-    public void add_closest_planets_vectors_lists_to_planets() { // MAKE PRIVATE AGAIN!!!!!!!!!!!!
+    private void add_closest_planets_vectors_lists_to_planets() {
 
         // for each planet searching 3 closest planets
         for (Planet planet : lifeless_planet_list) {
@@ -168,8 +165,7 @@ class Map {
         
         int random_index;
 
-        for(int i = 0; i < (aggresive_civilisation_quantity 
-        + pacifistic_civilisation_quantity); i++){
+        for(int i = 0; i < (aggresive_civilisation_quantity + pacifistic_civilisation_quantity); i++){
             
             //drawing random planet from list to bring planet to civilization
             random_index = rand.nextInt(0, lifeless_planet_list.size());
@@ -210,23 +206,39 @@ class Map {
     }
 
 
-    //XD we really don't know what is wrong with us, it looks awful:(  it is what it is
-    //when the plane to the programmers hell take off? 
-   /*
+    // method for spawning ships for civilizations
+    // it does look a bit messy but it works so im fine with it
+
    public void spawn_ships() {
-        for (pacifisticCivilization civ : civ_list){
+        for (pacifisticCivilization pacifisticCivilization : civ_list) {
+            for (Planet owned_planet : pacifisticCivilization.planets_possesed_list) {
+                if(owned_planet.extracted_resources >= pacifisticCivilization.ship_price){
+                    owned_planet.extracted_resources -= pacifisticCivilization.ship_price;
+                    
+                    //search for a free slot in euclidean space and spawn ship there
+                    int planet_x = owned_planet.x_dim;
+                    int planet_y = owned_planet.y_dim;
 
-            for (Planet planet_possesed : civ.planets_possesed_list) {
-
-                    if(planet_possesed.extracted_resources >= civ.ship_price){
-                        
-                        pacifisticShip pac_ship = new pacifisticShip(10, 2, 1, x_dim, y_dim);
-                        civ.ship_possesed_list.add(pac_ship);
-                        planet_possesed.extracted_resources -= civ.ship_price;
-
-                        if(i == 0) map_area[i+1][j] = pac_ship;
-                        else map_area[i-1][j] = pac_ship;
+                    int fuel = pacifisticCivilization.ship_fuel;
+                    int jump_cooldown = pacifisticCivilization.ship_jump_cooldown;
+                    int speed = pacifisticCivilization.ship_speed;
+                    
+                    boolean ship_spawned = false;
+                    for (int x = planet_x - 1; x < planet_x + 1 ; x++) {
+                        for (int y = planet_y - 1; y < planet_y + 1; y++) {
+                            if(x >= 0 && x < size && y >= 0 && y < size){
+                                if(map_area[x][y] == null){
+                                    map_area[x][y] = new pacifisticShip(fuel, jump_cooldown, speed, x, y);
+                                    ship_spawned = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(ship_spawned){
+                            break;
+                        }
                     }
+                }
             }
         }
     }
@@ -244,8 +256,8 @@ class Map {
 
     //                 int new_x, new_y;
     //                 do{
-    //                     new_x = rand.nextInt(-2, 1) + x;
-    //                     new_y = rand.nextInt(-2, 1) + y;
+    //                     new_x = rand.nextInt(-1, 2) + x; //from -1 to 2 because if we go for (-2, 1) to spierdolą w róg
+    //                     new_y = rand.nextInt(-1, 2) + y;
                       
     //                 }while(new_x < 0 || new_x >= size || new_x < 0 || new_y >= size || new_y < 0);
 
