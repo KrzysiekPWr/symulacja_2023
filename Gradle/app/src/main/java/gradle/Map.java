@@ -121,7 +121,6 @@ class Map {
         }
     }
     
-    
     private void spawn_black_holes(){
 
         Random rand = new Random();            
@@ -137,8 +136,7 @@ class Map {
             blackHole black_hole = new blackHole(2);
             map_area[random_x][random_y] = black_hole;
         }
-    }
-    
+    } 
 
     private void spawn_stars(){
 
@@ -156,9 +154,7 @@ class Map {
             map_area[random_x][random_y] = star; 
         }
     }
-    
-
-    
+     
     private void add_civilizations(){
         
         Random rand = new Random();
@@ -173,8 +169,8 @@ class Map {
             //adding planets to pacifistic civilizations first
             if(i < pacifistic_civilisation_quantity){
                 
-                //creating new pacifistic civilization
-                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 20);
+                //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
+                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 20, 15,2,2);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -186,8 +182,8 @@ class Map {
                 lifeless_planet_list.remove(random_index);
 
             }
-            else{
-                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 20);
+            else{                                                           // THESE SHOULD BE RANDOMIZED!
+                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 20, 15,2,2);
                 
                 civ_list.add(agrCiv);
                 agrCiv.planets_possesed_list.add(lifeless_planet_list.get(random_index));
@@ -205,10 +201,6 @@ class Map {
         }
     }
 
-
-    // method for spawning ships for civilizations
-    // it does look a bit messy but it works so im fine with it
-
    public void spawn_ships() {
         for (pacifisticCivilization pacifisticCivilization : civ_list) {
             for (Planet owned_planet : pacifisticCivilization.planets_possesed_list) {
@@ -222,14 +214,19 @@ class Map {
                     int fuel = pacifisticCivilization.ship_fuel;
                     int jump_cooldown = pacifisticCivilization.ship_jump_cooldown;
                     int speed = pacifisticCivilization.ship_speed;
+
+                    Random random = new Random();
                     
                     boolean ship_spawned = false;
-                    for (int x = planet_x - 1; x < planet_x + 1 ; x++) {
-                        for (int y = planet_y - 1; y < planet_y + 1; y++) {
+                    for (int x = planet_x - 1; x <= planet_x + 1 ; x++) {
+                        for (int y = planet_y - 1; y <= planet_y + 1; y++) {
                             if(x >= 0 && x < size && y >= 0 && y < size){
                                 if(map_area[x][y] == null){
-                                    map_area[x][y] = new pacifisticShip(fuel, jump_cooldown, speed, x, y);
+                                    map_area[x][y] = new pacifisticShip(fuel, jump_cooldown, speed, x, y, owned_planet,
+                                    //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
+                                    owned_planet.closest_planets_list.get(random.nextInt(0,3)));
                                     ship_spawned = true;
+                                    pacifisticCivilization.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
                                     break;
                                 }
                             }
@@ -245,34 +242,64 @@ class Map {
 
     /**
      * Function that moves ships:( 
-    //  */ 
-    // public void move_ships(){
-    //     for(int x = 0; x < size; x++) {
-    //         for (int y = 0; y < size; y++) {
+    */ 
+    public void move_ships(){
+        //write function that will move the ship closer to the closest to the destination planet
+        //if ship is on the planet then it should be removed from the map
+
+        for (pacifisticCivilization civ : civ_list) {
+            for (pacifisticShip ship : civ.ship_possesed_list) {
                 
-    //             if(map_area[x][y].special_char == '^'){
-                        
-    //                 Random rand = new Random();
+            int ship_x = ship.x_dim;
+            int ship_y = ship.y_dim;
 
-    //                 int new_x, new_y;
-    //                 do{
-    //                     new_x = rand.nextInt(-1, 2) + x; //from -1 to 2 because if we go for (-2, 1) to spierdolą w róg
-    //                     new_y = rand.nextInt(-1, 2) + y;
-                      
-    //                 }while(new_x < 0 || new_x >= size || new_x < 0 || new_y >= size || new_y < 0);
+            if(ship.isShipAlive() == false){
+                map_area[ship_x][ship_y] = null;
+            }
+            else if (ship.canShipMove() == true){
+                //check which move will get ship closer to its destination
 
-    //                 if(map_area[new_x][new_y].special_char == '.'){
+                int destination_x = ship.destination_planet.x_dim;
+                int destination_y = ship.destination_planet.y_dim;
 
-    //                     map_area[new_x][new_y] = map_area[x][y];
-                        
-    //                     objectInSpace object_in_space = new objectInSpace('.');
+                double act_distance_to_destination = Math.sqrt(Math.pow(ship_x - destination_x, 2) 
+                + Math.pow(ship_y - destination_y, 2));
 
-    //                     map_area[x][y] = object_in_space;
-    //                 }
- 
-    //             }
-    //         }
-    //     }
-    //}
+                double distance_to_destination_after_move = act_distance_to_destination;
+
+                //iterate through euclidean space around ship
+                for (int i = ship.x_dim - 1; i <= ship.x_dim + 1; i++) {
+                    for (int j = ship.y_dim - 1; j <= ship.y_dim + 1; j++) {
+                        if(i >= 0 && i < size && j >= 0 && j < size){
+                            if(map_area[i][j] == null){
+                                double distance_to_destination_after_move_temp = Math.sqrt(Math.pow(i - destination_x, 2) 
+                                + Math.pow(j - destination_y, 2));
+                                if(distance_to_destination_after_move_temp < distance_to_destination_after_move){
+                                    distance_to_destination_after_move = distance_to_destination_after_move_temp;
+                                    ship_x = i;
+                                    ship_y = j;
+                                }
+                            }
+                        }
+                    }
+                }
+                    //move ship to new position
+                    map_area[ship_x][ship_y] = ship;
+                    // clear the previous position
+                    map_area[ship.x_dim][ship.y_dim] = null;
+                    ship.x_dim = ship_x;
+                    ship.y_dim = ship_y;
+                    ship.fuel -= 1;
+                    ship.act_jump_cooldown = ship.jump_cooldown;
+            }
+            else{
+                ship.act_jump_cooldown -= ship.speed;
+            }
+
+            }
+        }
+
+    }
+
 }
 
