@@ -10,6 +10,7 @@ public class Planet implements emptySpace{
     int extracted_resources = 0;
     int x_dim;
     int y_dim;
+    pacifisticCivilization owner;
     List<Planet> closest_planets_list = new ArrayList<>();
 
     public Planet(int resources, int x_dim, int y_dim) {

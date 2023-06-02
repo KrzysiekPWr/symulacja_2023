@@ -57,4 +57,11 @@ public class pacifisticCivilization {
         owned_resources += resources_mined_in_era;
     }
     
+    public void setOwnedResources(int owned_resources){
+        this.owned_resources = owned_resources;
+    }
+
+    public int getOwnedResources(){
+        return owned_resources;
+    }
 }
