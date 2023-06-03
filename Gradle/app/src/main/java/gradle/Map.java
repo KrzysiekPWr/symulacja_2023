@@ -78,7 +78,7 @@ class Map {
     }
 
     private void add_closest_planets_vectors_lists_to_planets() {
-
+        
         // for each planet searching 3 closest planets
         for (Planet planet : lifeless_planet_list) {
             List<Planet> closest_planets_list_temp = new ArrayList<>();
@@ -118,6 +118,7 @@ class Map {
                 }
             }
             planet.closest_planets_list = closest_planets_list_temp;
+            planet.sort_closest_planets_list();
         }
     }
     
@@ -150,7 +151,7 @@ class Map {
                 random_y = rand.nextInt(0, size);
             }while(map_area[random_x][random_y] != null);
             
-            Star star = new Star(1.5, 100);
+            Star star = new Star(1.7, 100, 10);
             map_area[random_x][random_y] = star; 
         }
     }
@@ -231,15 +232,16 @@ class Map {
                                     if(civ instanceof pacifisticCivilization)
                                     //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
                                     map_area[x][y] = new pacifisticShip(fuel, jump_cooldown, speed, x, y,
-                                    owned_planet.closest_planets_list.get(random.nextInt(0,3)));
+                                    owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ);
                                     ship_spawned = true;
                                     civ.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
                                     break;
                                 }   
                                 else{
                                     //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
+                                    //choosing index of planet to which ship will be sent based on fitness proportionate selection
                                     map_area[x][y] = new aggressiveShip(fuel, jump_cooldown, speed, x, y,
-                                    owned_planet.closest_planets_list.get(random.nextInt(0,3)), civ.owned_resources*0);
+                                    owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources*0, civ);
                                     ship_spawned = true;
                                     civ.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
                                     break;
@@ -345,7 +347,7 @@ class Map {
                             Random rand_planet_id = new Random();
                             //if the planet is conquered by other pacifistic civilization, the ship calculates the distance to the new closest planet
                             // and sets it as its destination
-                            ship.destination_planet = ship.destination_planet.closest_planets_list.get(rand_planet_id.nextInt(0,3));
+                            ship.destination_planet = ship.destination_planet.closest_planets_list.get(ship.destination_planet.fitness_proportionate_selection_index());
                         }
                     }
                     else{ //this means that the planet is lifeless, so it can be possesed by civilization
@@ -353,6 +355,8 @@ class Map {
                         ship.destination_planet.owner = civ;
                         lifeless_planet_list.remove(ship.destination_planet);
                         map_area[ship.x_dim][ship.y_dim] = null;
+                        civ.ship_possesed_list.remove(ship);
+                        //almost the same as above, but no stealing resources
                     }
                 }
             }
@@ -372,6 +376,79 @@ class Map {
         else {
             return true;
         }
+    }
+
+    //function that activates black holes and stars
+    public void activate_static_objects() {
+
+        //searching for static objects in map
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++){
+
+                //for now it's divided into two separate functions, but it might be changed later
+                if(map_area[i][j] instanceof blackHole) activate_black_holes(i, j);
+                else if(map_area[i][j] instanceof Star) activate_stars(i, j);
+            }
+        }
+    }
+
+    private void activate_black_holes(int i, int j) {
+        
+        blackHole black_hole = (blackHole) map_area[i][j];
+                    
+        //checking if there are any objects in sucking range
+        for(int k = i - black_hole.sucking_range; k <= i + black_hole.sucking_range; k++){
+            for(int l = j - black_hole.sucking_range; l <= j + black_hole.sucking_range; l++){
+                
+                if(!(k >= 0 && k < size && l >= 0 && l < size)) {
+                    continue;
+                }
+                if(map_area[k][l] instanceof pacifisticShip) {
+
+                    //deleting all ships ocurrences - I HOPE SO!!!
+                    pacifisticShip ship = (pacifisticShip) map_area[k][l];
+                    ship.owner.ship_possesed_list.remove(ship);
+                    map_area[k][l] = null;
+
+                } else if (map_area[k][l] instanceof Planet) { 
+
+                    //deleting all planets ocurrences - I HOPE SO!!!
+                    Planet planet = (Planet) map_area[k][l];
+
+                    //NEED FOR DELETING PLANETS FROM closest_planets_list of other planets
+                    //checking if planet is possesed by civilization
+                    if(planet.owner != null) planet.owner.planets_possesed_list.remove(planet);
+                    map_area[k][l] = null;
+                } 
+            }
+        }
+          
+    }
+
+    private void activate_stars(int i, int j) {
+        
+        Star star = (Star) map_area[i][j];
+
+        for(int k = i - star.shining_range; k <= i + star.shining_range; k++){
+            for(int l = j - star.shining_range; l <= j + star.shining_range; l++){
+                
+                if(!(k >= 0 && k < size && l >= 0 && l < size)) {
+                    continue;
+                }
+                if (map_area[k][l] instanceof Planet) { 
+
+                    Planet planet = (Planet) map_area[k][l];
+
+                    //checking if planet is possesed by PACIFISTIC civilization and if it is, civilizations mining abilities are increased
+                    //kind of bonus for pacifistic civilizations
+                    if(planet.owner != null && !(planet.owner instanceof aggressiveCivilization) ) {
+                        planet.owner.mining_abilities = (int) (planet.owner.mining_abilities * star.power_rate); 
+                    }
+                    
+                } 
+            }
+        }
+        
     }
 }
 

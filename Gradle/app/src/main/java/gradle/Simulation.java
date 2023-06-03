@@ -14,7 +14,7 @@ public class Simulation {
         // Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         
         
-        Map map = new Map(0.04, 20, 2, 2, 1, 1);
+        Map map = new Map(0.05, 15, 2, 2, 1, 1);
 
                
         map.initialize_map();
@@ -25,11 +25,12 @@ public class Simulation {
 
         
         //executing simulation era
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 10; i++) {
             map.mine_resources();
             map.move_ships_and_conquer();
-            map.show_map();
+            //map.show_map();
             map.spawn_ships();
+            map.activate_static_objects();
             map.show_map();
             System.out.println("------------------------------------------");
         }

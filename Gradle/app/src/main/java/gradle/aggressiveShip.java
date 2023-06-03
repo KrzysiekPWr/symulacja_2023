@@ -5,9 +5,9 @@ public class aggressiveShip extends pacifisticShip{
 
     double attack_power; 
     
-    aggressiveShip(int fuel, int jump_cooldown, int speed, int x_dim, int y_dim, Planet destination_planet, double attack_power)
+    aggressiveShip(int fuel, int jump_cooldown, int speed, int x_dim, int y_dim, Planet destination_planet, double attack_power, pacifisticCivilization owner)
     {               
-        super(fuel, jump_cooldown, speed, x_dim, y_dim, destination_planet);
+        super(fuel, jump_cooldown, speed, x_dim, y_dim, destination_planet, owner);
         this.attack_power = attack_power;
     }
 
