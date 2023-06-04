@@ -12,6 +12,7 @@ public class pacifisticCivilization {
     int ship_speed;
     ArrayList<Planet> planets_possesed_list = new ArrayList<>();
     ArrayList<pacifisticShip> ship_possesed_list = new ArrayList<>();
+    boolean is_shined = false;
 
     public pacifisticCivilization(int mining_abilities, int ship_price, int ship_fuel, 
     int ship_jump_cooldown, int ship_speed) {

@@ -6,9 +6,8 @@ public class Star implements emptySpace{
     int extinction_time;
     int shining_range; //field that shows how far the star can shine
     
-    public Star(double power_rate, int extinction_time, int shining_range) {
+    public Star(double power_rate, int shining_range) {
         this.power_rate = power_rate;
-        this.extinction_time = extinction_time;
         this.shining_range = shining_range;
     }
 

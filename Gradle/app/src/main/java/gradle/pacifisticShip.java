@@ -11,6 +11,7 @@ public class pacifisticShip implements emptySpace {
     int y_dim;
     pacifisticCivilization owner;
     Planet destination_planet;
+    int times_ship_cannot_move_closer_to_destination = 0;
 
     pacifisticShip(int fuel, int jump_cooldown, int speed, int x_dim, int y_dim, Planet destination_planet, pacifisticCivilization owner)
     {

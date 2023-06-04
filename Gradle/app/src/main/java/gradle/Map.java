@@ -67,7 +67,7 @@ class Map {
 
                 if(chance_for_planet <= (int)(planetation*100)) {
 
-                    initial_resources = rand.nextInt(0, 1000); 
+                    initial_resources = rand.nextInt(100, 1000); 
 
                     Planet planet = new Planet(initial_resources, x, y);
                     map_area[x][y] = planet;
@@ -151,7 +151,7 @@ class Map {
                 random_y = rand.nextInt(0, size);
             }while(map_area[random_x][random_y] != null);
             
-            Star star = new Star(1.7, 100, 10);
+            Star star = new Star(1.7, 10);
             map_area[random_x][random_y] = star; 
         }
     }
@@ -171,7 +171,7 @@ class Map {
             if(i < pacifistic_civilisation_quantity){
                 
                 //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
-                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 20, 15,2,2);
+                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 40, 15,2,2);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -187,7 +187,7 @@ class Map {
 
             }
             else{                                                           // THESE SHOULD BE RANDOMIZED!
-                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 20, 15,2,2);
+                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 40, 15,2,2);
                 
                 civ_list.add(agrCiv);
                 Planet emptyPlanet = lifeless_planet_list.get(random_index);
@@ -222,7 +222,7 @@ class Map {
                     int jump_cooldown = civ.ship_jump_cooldown;
                     int speed = civ.ship_speed;
 
-                    Random random = new Random();
+                    // Random random = new Random();
                     
                     boolean ship_spawned = false;
                     for (int x = planet_x - 1; x <= planet_x + 1 ; x++) {
@@ -261,12 +261,14 @@ class Map {
      * Function that moves ships and checks if they are in range of any planet to conquer it,
      * checks what type of civ is the owner of the planet and plays accordingly
     */ 
-    public void move_ships_and_conquer(){
+    public void move_ships(){
         //write function that will move the ship closer to the closest to the destination planet
 
         for (pacifisticCivilization civ : civ_list) {
             for (int id_ship = 0; id_ship < civ.ship_possesed_list.size(); id_ship++) {
                 pacifisticShip ship = civ.ship_possesed_list.get(id_ship);
+
+                Random rand = new Random();
                 int ship_x = ship.x_dim;
                 int ship_y = ship.y_dim;
 
@@ -276,6 +278,15 @@ class Map {
                 }
                 else if (ship.canShipMove() == true){
                     //check which move will get ship closer to its destination
+
+                    if(ship.times_ship_cannot_move_closer_to_destination >=3){
+                        ship.times_ship_cannot_move_closer_to_destination = 0;
+                        ship.destination_planet = lifeless_planet_list.get(rand.nextInt(0, lifeless_planet_list.size()));
+                        
+                    }
+                    else{
+                        ship.times_ship_cannot_move_closer_to_destination++;
+                    }
 
                     int destination_x = ship.destination_planet.x_dim;
                     int destination_y = ship.destination_planet.y_dim;
@@ -301,6 +312,11 @@ class Map {
                             }
                         }
                     }
+                    if(distance_to_destination_after_move == act_distance_to_destination){
+                        ship.times_ship_cannot_move_closer_to_destination++;
+                        ship.fuel -= 1;
+                    }
+                    else{
                         //move ship to new position
                         map_area[ship_x][ship_y] = ship;
                         // clear the previous position
@@ -309,20 +325,31 @@ class Map {
                         ship.y_dim = ship_y;
                         ship.fuel -= 1;
                         ship.act_jump_cooldown = ship.jump_cooldown;
+                        ship.times_ship_cannot_move_closer_to_destination = 0;
+                    }
                 }
                 else{
                     ship.act_jump_cooldown -= ship.speed;
                 }
-                
+            }
+        }
+    }
+
+    public void conquer_planets_using_ships(){
+        for (pacifisticCivilization civ : civ_list) {
+            for(int id_ship = 0; id_ship < civ.ship_possesed_list.size(); id_ship++){
+
+                pacifisticShip ship = civ.ship_possesed_list.get(id_ship);
                 //if the ship is 1 distance away from the planet then it is removed from the map and the planet is conquered by civilization
                 double distance_to_planet = Math.sqrt(Math.pow(ship.x_dim - ship.destination_planet.x_dim, 2) + Math.pow(ship.y_dim - ship.destination_planet.y_dim, 2));
-                if(distance_to_planet <= 1){
+                if(distance_to_planet <= 2){
                     if(ship.destination_planet.owner instanceof aggressiveCivilization){
                         map_area[ship.x_dim][ship.y_dim] = null;
                         civ.ship_possesed_list.remove(ship); 
                         //might later add fight betweent aggressive ship and aggresive civ
                         }
                     else if(ship.destination_planet.owner instanceof pacifisticCivilization){
+                        
                         if(ship instanceof aggressiveShip){
                             aggressiveShip aggressive_ship = (aggressiveShip) ship;
                             if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.2){
@@ -333,18 +360,9 @@ class Map {
                                 ship.destination_planet.owner.planets_possesed_list.remove(ship.destination_planet);
                                 aggressive_ship.steal_resources(ship.destination_planet, ship.destination_planet.owner, (aggressiveCivilization)civ);
                             }
-
-                            /*
-                            * Co się dzieje jak spotykają się agrShip i pacCiv:
-                                usuwa się statek i usuwa się z listy posiadanych statków
-                                zmienia się owner planety
-                                planeta jest usuwana z listy posiadanych planet przez pacCiv
-                                planeta jest dodawana do listy posiad. planet przez agrCiv
-                                przejmują się zasoby planety
-                            */
                         }
-                        else{ // is ship is pacifistic
-                            Random rand_planet_id = new Random();
+                        else{ // if ship is pacifistic
+                            // Random rand_planet_id = new Random();  //what is this for?
                             //if the planet is conquered by other pacifistic civilization, the ship calculates the distance to the new closest planet
                             // and sets it as its destination
                             ship.destination_planet = ship.destination_planet.closest_planets_list.get(ship.destination_planet.fitness_proportionate_selection_index());
@@ -361,7 +379,6 @@ class Map {
                 }
             }
         }
-
     }
 
     /**
@@ -412,13 +429,13 @@ class Map {
 
                 } else if (map_area[k][l] instanceof Planet) { 
 
-                    //deleting all planets ocurrences - I HOPE SO!!!
-                    Planet planet = (Planet) map_area[k][l];
+                    // //deleting all planets ocurrences - I HOPE SO!!!
+                    // Planet planet = (Planet) map_area[k][l];
 
-                    //NEED FOR DELETING PLANETS FROM closest_planets_list of other planets
-                    //checking if planet is possesed by civilization
-                    if(planet.owner != null) planet.owner.planets_possesed_list.remove(planet);
-                    map_area[k][l] = null;
+                    // //NEED FOR DELETING PLANETS FROM closest_planets_list of other planets
+                    // //checking if planet is possesed by civilization
+                    // if(planet.owner != null) planet.owner.planets_possesed_list.remove(planet);
+                    // map_area[k][l] = null;
                 } 
             }
         }
@@ -441,8 +458,10 @@ class Map {
 
                     //checking if planet is possesed by PACIFISTIC civilization and if it is, civilizations mining abilities are increased
                     //kind of bonus for pacifistic civilizations
-                    if(planet.owner != null && !(planet.owner instanceof aggressiveCivilization) ) {
-                        planet.owner.mining_abilities = (int) (planet.owner.mining_abilities * star.power_rate); 
+                    //we need to do it ONLY ONCE, so we need to check if planet is already shined
+                    if(planet.owner != null && planet.owner.is_shined == false && !(planet.owner instanceof aggressiveCivilization)) {
+                        planet.owner.mining_abilities = (int) (planet.owner.mining_abilities * star.power_rate);
+                        planet.owner.is_shined = true; 
                     }
                     
                 } 
