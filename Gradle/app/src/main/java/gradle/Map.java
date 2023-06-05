@@ -151,7 +151,7 @@ class Map {
                 random_y = rand.nextInt(0, size);
             }while(map_area[random_x][random_y] != null);
             
-            Star star = new Star(1.7, 10);
+            Star star = new Star(1.001, 10);
             map_area[random_x][random_y] = star; 
         }
     }
@@ -241,7 +241,7 @@ class Map {
                                     //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
                                     //choosing index of planet to which ship will be sent based on fitness proportionate selection
                                     map_area[x][y] = new aggressiveShip(fuel, jump_cooldown, speed, x, y,
-                                    owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources*0, civ);
+                                    owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources*100000.0, civ);
                                     ship_spawned = true;
                                     civ.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
                                     break;

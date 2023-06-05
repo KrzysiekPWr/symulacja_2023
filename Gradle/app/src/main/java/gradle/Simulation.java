@@ -18,8 +18,8 @@ public abstract class Simulation {
         // Map map = new Map(Double.parseDouble(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]),
         // Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         
-        int map_size = 20;
-        Map map = new Map(0.05, map_size, 2, 2, 1, 1);
+        int map_size = 25;
+        Map map = new Map(0.03, map_size, 4, 3, 2, 2);
 
         mapGraphicsFrame map_frame = new mapGraphicsFrame();  
 
@@ -30,43 +30,53 @@ public abstract class Simulation {
         for(int i = 0; i < 100; i++) {
             start_time = Instant.now().getEpochSecond();
 
-            map.mine_resources();
-            map.spawn_ships();
-            map.move_ships();
-            map.activate_static_objects();
-            map.show_map();
-
-           map_frame.panel.update_map_frame(map.map_area);
-
-            //probalby there is need for a wait methods with ms
-            if( i%1 == 0)wait(1, start_time); 
-
-
-           // wait( 1, start_time);
             // map.mine_resources();
             // map.spawn_ships();
-
-            // wait(2, start_time);
-            // System.out.println(System.lineSeparator().repeat(map_size+1));
-            // System.out.println("Ships spawning");
+            // map_frame.panel.update_map_frame(map.map_area);
             // map.show_map();
+            
 
-            // start_time = Instant.now().getEpochSecond();
             // map.move_ships();
-            // wait(2, start_time);
-            // System.out.println(System.lineSeparator().repeat(map_size+1));
-            // System.out.println("Ships moving");
-            // map.show_map();
-
-            // start_time = Instant.now().getEpochSecond();
+            // map.activate_static_objects();
             // map.conquer_planets_using_ships();
-            // wait(2, start_time);
-            // System.out.println(System.lineSeparator().repeat(map_size+1));
-            // System.out.println("Ships conquering planets");
             // map.show_map();
+            // map_frame.panel.update_map_frame(map.map_area);
 
+
+           // probalby there is need for a wait methods with ms
+
+
+            wait( 1, start_time);
+            map.mine_resources();
+            map.spawn_ships();
+            map.show_map();
+            map_frame.panel.update_map_frame(map.map_area);
+
+
+            wait(1, start_time);
+            System.out.println(System.lineSeparator().repeat(map_size+1));
+            System.out.println("Ships spawning");
+            map.show_map();
+            map_frame.panel.update_map_frame(map.map_area);
+
+
+            map.move_ships();
+            wait(1, start_time);
+            System.out.println(System.lineSeparator().repeat(map_size+1));
+            System.out.println("Ships moving");
+            map.show_map();
+            map_frame.panel.update_map_frame(map.map_area);
+
+
+            start_time = Instant.now().getEpochSecond();
+            map.conquer_planets_using_ships();
+            wait(1, start_time);
+            System.out.println(System.lineSeparator().repeat(map_size+1));
+            System.out.println("Ships conquering planets");
+            map.show_map();
+            map_frame.panel.update_map_frame(map.map_area);
         
-            // System.out.println("------------------------------------------");
+            System.out.println("------------------------------------------");
         }
         System.out.println("Simulation ended");
     }

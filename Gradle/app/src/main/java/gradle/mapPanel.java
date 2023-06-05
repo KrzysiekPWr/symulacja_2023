@@ -23,6 +23,7 @@ public class mapPanel extends  JPanel{
     
     mapPanel () {
 
+        //creating elements to be displayed as images
         java.net.URL mapUrl = getClass().getResource("resources\\map_background.png");
         ImageIcon background_icon = new ImageIcon(mapUrl);
         background = background_icon.getImage();
@@ -70,21 +71,32 @@ public class mapPanel extends  JPanel{
         
         for(int i = 0; i < map_area.length; i++) {
             for(int j = 0; j < map_area.length; j++) {
+                
 
                 if(map_area[i][j] == null) {
                     continue;
                 }
 
-                if(map_area[i][j] instanceof pacifisticShip) {
-
-                    pacifisticShip ship = (pacifisticShip) map_area[i][j];
-
-                    if(ship instanceof aggressiveShip) {
-                        g2D.drawImage(agg_ship, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
-                    } else {
-                        g2D.drawImage(pac_ship, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
+                // if(map_area[i][j] instanceof pacifisticShip && !(map_area[i][j] instanceof aggressiveShip)) {
+                //     g2D.drawImage(pac_ship, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
+                //     continue;
+                // }
+                
+                // if(map_area[i][j] instanceof aggressiveShip) {
+                //     g2D.drawImage(agg_ship, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
+                //     continue;
+                // } why this dont show properly ships in frame?
+                
+                    //It's the wrong way to do it!
+                    if (map_area[i][j].toString().equals("#")) {
+                        g2D.drawImage(agg_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
+                        continue;
+                    } else if (map_area[i][j].toString().equals("~")){
+                        g2D.drawImage(pac_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
+                        continue;
                     }
-                }
+                
+                
 
                 if(map_area[i][j] instanceof Planet) {
 
@@ -97,14 +109,17 @@ public class mapPanel extends  JPanel{
                     else {
                         g2D.drawImage(emp_planet, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
                     }
+                    continue;
                 }
 
                 if(map_area[i][j] instanceof Star) {
                     g2D.drawImage(star, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
+                    continue;
                 }
 
                 if(map_area[i][j] instanceof blackHole) {
                     g2D.drawImage(black_hole, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
+                    continue;
                 }
 
                 
@@ -114,10 +129,9 @@ public class mapPanel extends  JPanel{
         
     }
 
-    public void update_map_frame(emptySpace map_area[][]) {
+    public void update_map_frame(emptySpace map_area_passed[][]) {
 
-        this.map_area = map_area;
-        
+        map_area = map_area_passed;        
         repaint();
     }
 
