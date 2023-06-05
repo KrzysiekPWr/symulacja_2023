@@ -19,7 +19,7 @@ public abstract class Simulation {
         // Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
         
         int map_size = 25;
-        Map map = new Map(0.03, map_size, 4, 3, 2, 2);
+        Map map = new Map(0.05, map_size, 4, 3, 2, 2);
 
         mapGraphicsFrame map_frame = new mapGraphicsFrame();  
 
@@ -27,8 +27,10 @@ public abstract class Simulation {
         map.show_map();
         
         //executing simulation era
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 10; i++) {
             start_time = Instant.now().getEpochSecond();
+
+            Instant now = Instant.now();
 
             // map.mine_resources();
             // map.spawn_ships();
@@ -46,14 +48,13 @@ public abstract class Simulation {
            // probalby there is need for a wait methods with ms
 
 
-            wait( 1, start_time);
+            // wait( 1, start_time);
+            
+            
+            
             map.mine_resources();
             map.spawn_ships();
-            map.show_map();
-            map_frame.panel.update_map_frame(map.map_area);
-
-
-            wait(1, start_time);
+            // wait(1, start_time);
             System.out.println(System.lineSeparator().repeat(map_size+1));
             System.out.println("Ships spawning");
             map.show_map();
@@ -61,7 +62,7 @@ public abstract class Simulation {
 
 
             map.move_ships();
-            wait(1, start_time);
+            // wait(1, start_time);
             System.out.println(System.lineSeparator().repeat(map_size+1));
             System.out.println("Ships moving");
             map.show_map();
@@ -70,7 +71,7 @@ public abstract class Simulation {
 
             start_time = Instant.now().getEpochSecond();
             map.conquer_planets_using_ships();
-            wait(1, start_time);
+            //wait(1, start_time);
             System.out.println(System.lineSeparator().repeat(map_size+1));
             System.out.println("Ships conquering planets");
             map.show_map();

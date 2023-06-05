@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 class Map {
     
     double planetation;
@@ -50,6 +49,7 @@ class Map {
         spawn_planets();
         spawn_black_holes();
         spawn_stars();
+        activate_static_objects();
         add_closest_planets_vectors_lists_to_planets();
         add_civilizations();
     }
@@ -171,7 +171,7 @@ class Map {
             if(i < pacifistic_civilisation_quantity){
                 
                 //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
-                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 40, 15,2,2);
+                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 40, 7,2,2);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -211,7 +211,7 @@ class Map {
    public void spawn_ships() {
         for (pacifisticCivilization civ : civ_list) {
             for (Planet owned_planet : civ.planets_possesed_list) {
-                if(owned_planet.extracted_resources >= civ.ship_price){
+                if(owned_planet.extracted_resources >= civ.ship_price) {
                     owned_planet.extracted_resources -= civ.ship_price;
                     
                     //search for a free slot in euclidean space and spawn ship there
@@ -227,30 +227,38 @@ class Map {
                     boolean ship_spawned = false;
                     for (int x = planet_x - 1; x <= planet_x + 1 ; x++) {
                         for (int y = planet_y - 1; y <= planet_y + 1; y++) {
-                            if(x >= 0 && x < size && y >= 0 && y < size){
-                                if(map_area[x][y] == null){
-                                    if(civ instanceof pacifisticCivilization)
-                                    //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
-                                    map_area[x][y] = new pacifisticShip(fuel, jump_cooldown, speed, x, y,
-                                    owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ);
-                                    ship_spawned = true;
-                                    civ.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
-                                    break;
-                                }   
-                                else{
-                                    //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
-                                    //choosing index of planet to which ship will be sent based on fitness proportionate selection
-                                    map_area[x][y] = new aggressiveShip(fuel, jump_cooldown, speed, x, y,
-                                    owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources*100000.0, civ);
-                                    ship_spawned = true;
-                                    civ.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
-                                    break;
-                                    }
+
+                            if(x < 0 || x >= size || y < 0 || y >= size){
+                                continue;
+                            }
+
+                            if(map_area[x][y] != null) {
+                                continue;
+                            }   
+
+                            if(civ instanceof aggressiveCivilization) {
+                                
+                                //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
+                                //choosing index of planet to which ship will be sent based on fitness proportionate selection
+                                map_area[x][y] = new aggressiveShip(fuel, jump_cooldown, speed, x, y,
+                                owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources*100000.0, civ);
+                                ship_spawned = true;
+                                civ.ship_possesed_list.add((aggressiveShip) map_area[x][y]);
+                                break;
+                                
+                            } else {
+                                //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
+                                map_area[x][y] = new pacifisticShip(fuel, jump_cooldown, speed, x, y,
+                                owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ);
+                                ship_spawned = true;
+                                civ.ship_possesed_list.add((pacifisticShip) map_area[x][y]);
+                                break;
                             }
                         }
                         if(ship_spawned){
-                            break;
+                        break;
                         }
+
                     }
                 }
             }
@@ -353,12 +361,21 @@ class Map {
                         if(ship instanceof aggressiveShip){
                             aggressiveShip aggressive_ship = (aggressiveShip) ship;
                             if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.2){
+
+                                //deleting ship form map and civilization
                                 map_area[ship.x_dim][ship.y_dim] = null;
+
+                                //deleting ship from civilization ship_list
                                 civ.ship_possesed_list.remove(ship);
+
+                                //changing ship owner
                                 ship.destination_planet.owner = civ;
+
+
                                 civ.planets_possesed_list.add(ship.destination_planet);
                                 ship.destination_planet.owner.planets_possesed_list.remove(ship.destination_planet);
-                                aggressive_ship.steal_resources(ship.destination_planet, ship.destination_planet.owner, (aggressiveCivilization)civ);
+
+                                aggressive_ship.steal_resources(ship.destination_planet, ship.destination_planet.owner, (aggressiveCivilization) ship.owner);
                             }
                         }
                         else{ // if ship is pacifistic

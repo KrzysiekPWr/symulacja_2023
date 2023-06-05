@@ -7,10 +7,14 @@ import javax.swing.*;
 
 public class mapPanel extends  JPanel{
     
-    final int panel_width = 500;
-    final int panel_height = 500;
+    private Timer timer;
+    private int interval = 100; // Update interval in milliseconds
+
+    int panel_width = 500;
+    int panel_height = 500;
 
     emptySpace map_area[][];
+    emptySpace previous_map_area[][];
 
     Image background;
     Image pac_ship;
@@ -20,43 +24,48 @@ public class mapPanel extends  JPanel{
     Image emp_planet;
     Image star;
     Image black_hole;
+
+    
     
     mapPanel () {
 
         //creating elements to be displayed as images
-        java.net.URL mapUrl = getClass().getResource("resources\\map_background.png");
+        java.net.URL mapUrl = getClass().getResource("/map_background.png");
         ImageIcon background_icon = new ImageIcon(mapUrl);
         background = background_icon.getImage();
 
-        java.net.URL pac_shipUrl = getClass().getResource("resources\\pac_ship.png");
+        java.net.URL pac_shipUrl = getClass().getResource("/pac_ship.png");
         ImageIcon pac_ship_icon = new ImageIcon(pac_shipUrl);
         pac_ship = pac_ship_icon.getImage();
 
-        java.net.URL agg_shipUrl = getClass().getResource("resources\\agg_ship.png");
+        java.net.URL agg_shipUrl = getClass().getResource("/agg_ship.png");
         ImageIcon agg_ship_icon = new ImageIcon(agg_shipUrl);
         agg_ship = agg_ship_icon.getImage();
 
-        java.net.URL agg_planetUrl = getClass().getResource("resources\\agg_planet.png");
+        java.net.URL agg_planetUrl = getClass().getResource("/agg_planet.png");
         ImageIcon agg_planet_icon = new ImageIcon(agg_planetUrl);
         agg_planet = agg_planet_icon.getImage();
 
-        java.net.URL pac_planetUrl = getClass().getResource("resources\\pac_planet.png");
+        java.net.URL pac_planetUrl = getClass().getResource("/pac_planet.png");
         ImageIcon pac_planet_icon = new ImageIcon(pac_planetUrl);
         pac_planet = pac_planet_icon.getImage();
 
-        java.net.URL emp_planetUrl = getClass().getResource("resources\\emp_planet.png");
+        java.net.URL emp_planetUrl = getClass().getResource("/emp_planet.png");
         ImageIcon emp_planet_icon = new ImageIcon(emp_planetUrl);
         emp_planet = emp_planet_icon.getImage();
 
-        java.net.URL black_holeUrl = getClass().getResource("resources\\black_hole.png");
+        java.net.URL black_holeUrl = getClass().getResource("/black_hole.png");
         ImageIcon black_hole_icon = new ImageIcon(black_holeUrl);
         black_hole = black_hole_icon.getImage();
 
-        java.net.URL starUrl = getClass().getResource("resources\\star.png");
+        java.net.URL starUrl = getClass().getResource("/star.png");
         ImageIcon star_icon = new ImageIcon(starUrl);
         star = star_icon.getImage();
         
         this.setPreferredSize(new Dimension(panel_width, panel_height));
+        this.setBackground(Color.black);
+
+        
         
         
         //ImageIcon icon = new ImageIcon("map_background.png");
@@ -66,12 +75,39 @@ public class mapPanel extends  JPanel{
     public void paint(Graphics g) {
 
         Graphics2D g2D = (Graphics2D) g;
+    
+        //Scaling the background and images to fit nicely the panel
+        panel_height = this.getHeight();
+        panel_width = this.getWidth();
+    
+
+        // int scale = panel_width / map_area.length;
+
         
-        g2D.drawImage(background, 0, 0, null);
-        
-        for(int i = 0; i < map_area.length; i++) {
-            for(int j = 0; j < map_area.length; j++) {
+
+        // pac_ship = pac_ship.getScaledInstance(scale, scale, Image.SCALE_SMOOTH);
+        // agg_ship = agg_ship.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
+        // pac_planet = pac_planet.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
+        // agg_planet = agg_planet.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
+        // emp_planet = emp_planet.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
+        // star = star.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
+        // black_hole = black_hole.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
+
+
+        super.paint(g); // draws background
+        //g2D.drawImage(background, 0, 0, null);
+
+        for(int j = 0; j < map_area.length; j++) {
+            for(int i = 0; i < map_area.length; i++) {
                 
+                int x_change = 0;
+                int y_change = 0;
+                int previous_ship_x = -2; //error code
+                int previous_ship_y = -2; //error code
+
+                int x_velocity = 2;
+                int y_velocity = 2;
+
 
                 if(map_area[i][j] == null) {
                     continue;
@@ -87,17 +123,39 @@ public class mapPanel extends  JPanel{
                 //     continue;
                 // } why this dont show properly ships in frame?
                 
-                    //It's the wrong way to do it!
-                    if (map_area[i][j].toString().equals("#")) {
-                        g2D.drawImage(agg_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
-                        continue;
-                    } else if (map_area[i][j].toString().equals("~")){
-                        g2D.drawImage(pac_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
-                        continue;
-                    }
-                
-                
+                //It's the wrong way to do it!
 
+                //Work in progress! Moving ships
+                // if(map_area[i][j] instanceof pacifisticShip) {
+
+                //     pacifisticShip ship = (pacifisticShip) map_area[i][j];
+
+                //     for(int k = i - 1 ; k < 2; k++) {
+                //         for(int l = j - 1; l < 2; l++) {
+
+                //             if(k < 0 || l < 0 || k >= map_area.length || l >= map_area.length) {
+                //                 continue;
+                //             }
+
+                //             if(previous_map_area[k][l].equals(ship)) {
+                //                 previous_ship_x = k;
+                //                 previous_ship_y = l;
+                //             }
+                //         }
+                //     }
+                // }
+
+                // x_change  = (i - previous_ship_x) * x_velocity;
+                // y_change  = (j - previous_ship_y) * y_velocity;
+
+                if (map_area[i][j].toString().equals("#")) {
+                    g2D.drawImage(agg_ship, x_change + i * panel_width / map_area.length, j * panel_height / map_area.length, null);
+                    continue;
+                } else if (map_area[i][j].toString().equals("~")){
+                    g2D.drawImage(pac_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
+                    continue;
+                }
+            
                 if(map_area[i][j] instanceof Planet) {
 
                     Planet planet = (Planet) map_area[i][j];
@@ -121,25 +179,20 @@ public class mapPanel extends  JPanel{
                     g2D.drawImage(black_hole, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
                     continue;
                 }
-
-                
-
             }
         }
-        
     }
 
     public void update_map_frame(emptySpace map_area_passed[][]) {
 
-        map_area = map_area_passed;        
-        repaint();
-    }
+        map_area = map_area_passed;   
 
-
-
-    
-
-    
-
-    
+        
+        timer = new Timer(interval, e -> {
+            
+            repaint();
+        });
+        timer.start(); // Start the timer
+        previous_map_area = map_area;
+    }    
 }

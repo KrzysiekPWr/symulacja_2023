@@ -1,6 +1,5 @@
 package gradle;
 
-import java.awt.*;
 import javax.swing.*;
 
 public class mapGraphicsFrame extends JFrame {
