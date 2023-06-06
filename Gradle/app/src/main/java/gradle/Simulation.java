@@ -5,8 +5,13 @@ package gradle;
 
 import java.time.Instant;
 
-public abstract class Simulation {
+import java.util.concurrent.TimeUnit;
 
+
+public abstract class Simulation {
+    
+    
+    
     static long seconds_now;
     static long start_time;
     static long seconds_from_start;
@@ -31,35 +36,61 @@ public abstract class Simulation {
         Map map = new Map(0.05, map_size, 2, 2, 2, 1);
         
 
+        mapGraphicsFrame map_frame = new mapGraphicsFrame();
         map.initialize_map();
         map.show_map();
+    
         
         // executing simulation era
         for(int i = 0; i < 10; i++) {
             start_time = Instant.now().getEpochSecond();
+
+            Instant now = Instant.now();
+
             map.mine_resources();
             map.spawn_ships();
-
-            wait(2, start_time);
-            System.out.println(System.lineSeparator().repeat(map_size+1));
-            System.out.println("Ships spawning");
-            map.show_map();
-
-            start_time = Instant.now().getEpochSecond();
+            map_frame.panel.update_map_frame(map.map_area);
+            
+            
             map.move_ships();
-            wait(2, start_time);
-            System.out.println(System.lineSeparator().repeat(map_size+1));
-            System.out.println("Ships moving");
-            map.show_map();
-
-            start_time = Instant.now().getEpochSecond();
-            map.conquer_planets_using_ships();
-            wait(2, start_time);
-            System.out.println(System.lineSeparator().repeat(map_size+1));
-            System.out.println("Ships conquering planets");
-            map.show_map();
-
             map.activate_static_objects();
+            map.conquer_planets_using_ships();
+            map_frame.panel.update_map_frame(map.map_area);
+
+            try {
+                    TimeUnit.MILLISECONDS.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+            }
+           // probalby there is need for a wait methods with ms
+
+       //     wait( 1, start_time);
+                        
+            // map.mine_resources();
+            // map.spawn_ships();
+            // // wait(1, start_time);
+            // System.out.println(System.lineSeparator().repeat(map_size+1));
+            // System.out.println("Ships spawning");
+            // //map.show_map();
+            // map_frame.panel.update_map_frame(map.map_area);
+
+
+            // map.move_ships();
+            // // wait(1, start_time);
+            // System.out.println(System.lineSeparator().repeat(map_size+1));
+            // System.out.println("Ships moving");
+            // //map.show_map();
+            // map_frame.panel.update_map_frame(map.map_area);
+
+
+            // start_time = Instant.now().getEpochSecond();
+            // map.conquer_planets_using_ships();
+            // //wait(1, start_time);
+            // System.out.println(System.lineSeparator().repeat(map_size+1));
+            // System.out.println("Ships conquering planets");
+            // //map.show_map();
+            // map_frame.panel.update_map_frame(map.map_area);
+        
             // System.out.println("------------------------------------------");
         }
         System.out.println("Simulation ended");
