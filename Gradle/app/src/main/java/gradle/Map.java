@@ -165,13 +165,14 @@ class Map {
         for(int i = 0; i < (aggresive_civilisation_quantity + pacifistic_civilisation_quantity); i++){
             
             //drawing random planet from list to bring planet to civilization
+            if(lifeless_planet_list.size() == 0) break; //if there are no more planets to posses, break loop
             random_index = rand.nextInt(0, lifeless_planet_list.size());
             
             //adding planets to pacifistic civilizations first
             if(i < pacifistic_civilisation_quantity){
                 
                 //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
-                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 40, 7,2,2);
+                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 5, 7,2,2);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -187,7 +188,7 @@ class Map {
 
             }
             else{                                                           // THESE SHOULD BE RANDOMIZED!
-                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 40, 15,2,2);
+                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 5, 15,2,2);
                 
                 civ_list.add(agrCiv);
                 Planet emptyPlanet = lifeless_planet_list.get(random_index);
@@ -290,11 +291,10 @@ class Map {
                     if(ship.times_ship_cannot_move_closer_to_destination >=3){
                         int lifeless_size = lifeless_planet_list.size();
                         ship.times_ship_cannot_move_closer_to_destination = 0;
-                        ship.destination_planet = lifeless_planet_list.get(rand.nextInt(0, lifeless_size));
-                        
-                    }
-                    else{
-                        ship.times_ship_cannot_move_closer_to_destination++;
+                        if(lifeless_size >0){
+                            ship.destination_planet = lifeless_planet_list.get(rand.nextInt(0, lifeless_size));
+                        }
+                        continue;
                     }
 
                     int destination_x = ship.destination_planet.x_dim;
@@ -361,7 +361,7 @@ class Map {
                         
                         if(ship instanceof aggressiveShip){
                             aggressiveShip aggressive_ship = (aggressiveShip) ship;
-                            if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.2){
+                            if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.1){
 
                                 //deleting ship form map and civilization
                                 map_area[ship.x_dim][ship.y_dim] = null;

@@ -19,6 +19,7 @@ public abstract class Simulation {
         
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
         //THEY DO NOT WORK ON THE SAME DATA
+
         make_simulation_for_script(args); //for script (uncomment if needed)
 
         // show_simulation(); //for testing and showing simulation
@@ -33,7 +34,7 @@ public abstract class Simulation {
 
     private static void show_simulation(){
         int map_size = 15;
-        Map map = new Map(0.05, map_size, 2, 2, 2, 1);
+        Map map = new Map(0.02, map_size, 2, 2, 3, 3);
         
 
         mapGraphicsFrame map_frame = new mapGraphicsFrame();
@@ -42,7 +43,7 @@ public abstract class Simulation {
     
         
         // executing simulation era
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 1000; i++) {
             start_time = Instant.now().getEpochSecond();
 
             Instant now = Instant.now();
@@ -58,7 +59,7 @@ public abstract class Simulation {
             map_frame.panel.update_map_frame(map.map_area);
 
             try {
-                    TimeUnit.MILLISECONDS.sleep(200);
+                    TimeUnit.MILLISECONDS.sleep(600);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
             }
@@ -100,17 +101,22 @@ public abstract class Simulation {
         double planetation = Double.parseDouble(args[0]);
         int map_size = Integer.parseInt(args[1]);
         int stars_quantity = Integer.parseInt(args[2]);
-        int black_holes_quantity = Integer.parseInt(args[2]);
-        int aggresive_civilisation_quantity = Integer.parseInt(args[3]);
-        int pacifistic_civilisation_quantity = Integer.parseInt(args[4]);
-        int number_of_eras = Integer.parseInt(args[5]);
-        int number_of_repeats = Integer.parseInt(args[6]);
+        int black_holes_quantity = Integer.parseInt(args[3]);
+        int aggresive_civilisation_quantity = Integer.parseInt(args[4]);
+        int pacifistic_civilisation_quantity = Integer.parseInt(args[5]);
+        int number_of_eras = Integer.parseInt(args[6]);
+        int number_of_repeats = Integer.parseInt(args[7]);
 
         
-        // System.out.println(planetation + " " + map_size + " " + stars_quantity + " " + black_holes_quantity + " " + aggresive_civilisation_quantity + " " + pacifistic_civilisation_quantity + " " + number_of_eras + " " + number_of_repeats);
+        // System.out.println(planetation, map_size, stars_quantity, black_holes_quantity,
+        // aggresive_civilisation_quantity, pacifistic_civilisation_quantity);
         for (int i = 0; i < number_of_repeats; i++) {
             Map map = new Map(planetation, map_size, stars_quantity, black_holes_quantity, aggresive_civilisation_quantity, pacifistic_civilisation_quantity);
             map.initialize_map();
+
+            // print planetation, map size, stars quantity, black holes quantity, aggresive civilisation quantity, pacifistic civilisation quantity, number of eras, number of repeats
+            System.out.println(planetation + " " + map_size + " " + stars_quantity + " " + black_holes_quantity + " " + aggresive_civilisation_quantity + " " + pacifistic_civilisation_quantity);
+
             for(int j = 0; j < number_of_eras; j++) {
                 map.mine_resources();
                 map.spawn_ships();
@@ -121,10 +127,19 @@ public abstract class Simulation {
             for (pacifisticCivilization civilization : map.civ_list) {
                 //print all info about particular civilization at the end
                 //of each simulation
-                System.out.print(civilization.toString() + " " + civilization.owned_resources + " " + planetation + " " + map_size + " " + stars_quantity + " " + black_holes_quantity + " " + aggresive_civilisation_quantity + " " + pacifistic_civilisation_quantity + " " + number_of_eras + " " + number_of_repeats + " ");
+                System.out.print(civilization.toString() + " " + civilization.owned_resources);
                 System.out.println();
             }
-            
+            System.out.println("-");
+
+            /*
+             * P 99123 0.02 15 2
+             * A 12313
+             * P 21331
+             * 
+             * 0.32 15 2 4
+             * P 9213
+             */
         }
     }
 }
