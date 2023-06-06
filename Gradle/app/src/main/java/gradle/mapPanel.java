@@ -75,7 +75,9 @@ public class mapPanel extends  JPanel{
     public void paint(Graphics g) {
 
         Graphics2D g2D = (Graphics2D) g;
-    
+
+        
+
         //Scaling the background and images to fit nicely the panel
         panel_height = this.getHeight();
         panel_width = this.getWidth();
@@ -97,16 +99,21 @@ public class mapPanel extends  JPanel{
         super.paint(g); // draws background
         //g2D.drawImage(background, 0, 0, null);
 
+        //setting drawing connections between ships and owners 
+        g2D.setStroke(new BasicStroke(1));
+
         for(int j = 0; j < map_area.length; j++) {
             for(int i = 0; i < map_area.length; i++) {
                 
-                int x_change = 0;
-                int y_change = 0;
+                int x_change_in_map = 0;
+                int y_change_in_map = 0;
                 int previous_ship_x = -2; //error code
                 int previous_ship_y = -2; //error code
 
                 int x_velocity = 2;
                 int y_velocity = 2;
+
+                pacifisticShip acc_ship = null;
 
 
                 if(map_area[i][j] == null) {
@@ -145,13 +152,41 @@ public class mapPanel extends  JPanel{
                 //     }
                 // }
 
-                // x_change  = (i - previous_ship_x) * x_velocity;
-                // y_change  = (j - previous_ship_y) * y_velocity;
+                x_change_in_map  = i - previous_ship_x;
+                y_change_in_map  = j - previous_ship_y;
+
+                x_velocity = x_change_in_map * panel_width / map_area.length;
+
+
+                if(map_area[i][j] instanceof pacifisticShip) {
+                    acc_ship = (pacifisticShip) map_area[i][j];
+                } 
+
+                
 
                 if (map_area[i][j].toString().equals("#")) {
-                    g2D.drawImage(agg_ship, x_change + i * panel_width / map_area.length, j * panel_height / map_area.length, null);
+                   
+                    //drawing connection between ship and owner
+                    g2D.setPaint(Color.RED);
+                    
+                    g2D.drawLine(pac_ship.getWidth(null)/2 + i * panel_width / map_area.length, 
+                    pac_ship.getHeight(null)/2 + j * panel_height / map_area.length, 
+                    pac_ship.getWidth(null)/2 + acc_ship.owner.planets_possesed_list.get(0).x_dim * panel_width / map_area.length,
+                    pac_ship.getHeight(null)/2 + acc_ship.owner.planets_possesed_list.get(0).y_dim * panel_height / map_area.length);
+
+                    //drawing ship image
+                    g2D.drawImage(agg_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
+                
                     continue;
                 } else if (map_area[i][j].toString().equals("~")){
+
+                    g2D.setColor(Color.GREEN);
+                    g2D.drawLine(pac_ship.getWidth(null)/2 + i * panel_width / map_area.length, 
+                    pac_ship.getHeight(null)/2 + j * panel_height / map_area.length, 
+                    pac_ship.getWidth(null)/2 + acc_ship.owner.planets_possesed_list.get(0).x_dim * panel_width / map_area.length,
+                    pac_ship.getHeight(null)/2 + acc_ship.owner.planets_possesed_list.get(0).y_dim * panel_height / map_area.length);
+                    
+                    //drawing ship image
                     g2D.drawImage(pac_ship, i * panel_width / map_area.length, j * panel_height / map_area.length, null);
                     continue;
                 }
@@ -159,12 +194,29 @@ public class mapPanel extends  JPanel{
                 if(map_area[i][j] instanceof Planet) {
 
                     Planet planet = (Planet) map_area[i][j];
+                    
+                    g2D.setColor(Color.WHITE);  
+                    //painting resources
+                    if(planet.owner != null) {
+
+                        if(planet.owner.planets_possesed_list.get(0).equals(planet)) { 
+                            g2D.drawString("Resources: " + String.valueOf(planet.owner.owned_resources) , 
+                            i * panel_width/map_area.length - 35,
+                            j * panel_height/map_area.length);
+     
+                        }
+                                              
+                        g2D.drawLine(emp_planet.getWidth(null)/2 + i * panel_width / map_area.length, 
+                        emp_planet.getHeight(null)/2 + j * panel_height / map_area.length, 
+                        emp_planet.getWidth(null)/2 + planet.owner.planets_possesed_list.get(0).x_dim * panel_width / map_area.length,
+                        emp_planet.getHeight(null)/2 + planet.owner.planets_possesed_list.get(0).y_dim * panel_height / map_area.length);
+                    
+                    }
                     if(planet.owner instanceof aggressiveCivilization) {
                         g2D.drawImage(agg_planet, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
                     } else if (planet.owner instanceof pacifisticCivilization) {
                         g2D.drawImage(pac_planet, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
-                    }
-                    else {
+                    } else {
                         g2D.drawImage(emp_planet, i*panel_width/map_area.length, j*panel_height/map_area.length, null);
                     }
                     continue;
