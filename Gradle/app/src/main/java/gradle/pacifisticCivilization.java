@@ -65,4 +65,9 @@ public class pacifisticCivilization {
     public int getOwnedResources(){
         return owned_resources;
     }
+
+    @Override
+    public String toString() {
+        return "P";
+    }
 }

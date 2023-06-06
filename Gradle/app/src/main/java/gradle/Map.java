@@ -280,8 +280,9 @@ class Map {
                     //check which move will get ship closer to its destination
 
                     if(ship.times_ship_cannot_move_closer_to_destination >=3){
+                        int lifeless_size = lifeless_planet_list.size();
                         ship.times_ship_cannot_move_closer_to_destination = 0;
-                        ship.destination_planet = lifeless_planet_list.get(rand.nextInt(0, lifeless_planet_list.size()));
+                        ship.destination_planet = lifeless_planet_list.get(rand.nextInt(0, lifeless_size));
                         
                     }
                     else{

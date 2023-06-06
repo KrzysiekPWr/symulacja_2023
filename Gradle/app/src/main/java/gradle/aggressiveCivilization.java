@@ -7,5 +7,8 @@ public class aggressiveCivilization extends pacifisticCivilization{
         super(mining_abilities, ship_price, ship_fuel, ship_jump_cooldown, ship_speed);
     }
 
-    
+    @Override
+    public String toString() {
+        return "A";
+    }
 }
