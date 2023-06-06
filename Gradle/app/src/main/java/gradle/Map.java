@@ -172,7 +172,7 @@ class Map {
             if(i < pacifistic_civilisation_quantity){
                 
                 //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
-                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 5, 7,2,2);
+                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 40, 7,2,2);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -188,7 +188,7 @@ class Map {
 
             }
             else{                                                           // THESE SHOULD BE RANDOMIZED!
-                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 5, 15,2,2);
+                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 50, 15,2,2);
                 
                 civ_list.add(agrCiv);
                 Planet emptyPlanet = lifeless_planet_list.get(random_index);
@@ -351,7 +351,7 @@ class Map {
                 pacifisticShip ship = civ.ship_possesed_list.get(id_ship);
                 //if the ship is 1 distance away from the planet then it is removed from the map and the planet is conquered by civilization
                 double distance_to_planet = Math.sqrt(Math.pow(ship.x_dim - ship.destination_planet.x_dim, 2) + Math.pow(ship.y_dim - ship.destination_planet.y_dim, 2));
-                if(distance_to_planet <= 2){
+                if(distance_to_planet < 2){
                     if(ship.destination_planet.owner instanceof aggressiveCivilization){
                         map_area[ship.x_dim][ship.y_dim] = null;
                         civ.ship_possesed_list.remove(ship); 
@@ -373,7 +373,7 @@ class Map {
                                 ship.destination_planet.owner = civ;
 
 
-                                civ.planets_possesed_list.add(ship.destination_planet);
+                                ship.owner.planets_possesed_list.add(ship.destination_planet);
                                 ship.destination_planet.owner.planets_possesed_list.remove(ship.destination_planet);
 
                                 aggressive_ship.steal_resources(ship.destination_planet, ship.destination_planet.owner, (aggressiveCivilization) ship.owner);

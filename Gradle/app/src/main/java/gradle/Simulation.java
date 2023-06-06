@@ -15,14 +15,15 @@ public abstract class Simulation {
     static long seconds_now;
     static long start_time;
     static long seconds_from_start;
+    static int wait_miliseconds = 200;
     public static void main(String[] args) {
         
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
         //THEY DO NOT WORK ON THE SAME DATA
 
-        make_simulation_for_script(args); //for script (uncomment if needed)
+        //make_simulation_for_script(args); //for script (uncomment if needed)
 
-        // show_simulation(); //for testing and showing simulation
+        show_simulation(); //for testing and showing simulation
     }
 
     private static void wait(long seconds, long start_time) {
@@ -33,17 +34,19 @@ public abstract class Simulation {
     }
 
     private static void show_simulation(){
-        int map_size = 15;
-        Map map = new Map(0.02, map_size, 2, 2, 3, 3);
+        int map_size = 30;
+        Map map = new Map(0.03, map_size, 2, 3, 3, 3);
         
 
-        mapGraphicsFrame map_frame = new mapGraphicsFrame();
         map.initialize_map();
-        map.show_map();
+        //map.show_map();
     
+        mapGraphicsFrame map_frame = new mapGraphicsFrame();
+        soundPlayer sound_player = new soundPlayer();
+        sound_player.play(true);
         
         // executing simulation era
-        for(int i = 0; i < 1000; i++) {
+        for(int i = 0; i < 500; i++) {
             start_time = Instant.now().getEpochSecond();
 
             Instant now = Instant.now();
@@ -51,52 +54,46 @@ public abstract class Simulation {
             map.mine_resources();
             map.spawn_ships();
             map_frame.panel.update_map_frame(map.map_area);
-            
+            try {
+                TimeUnit.MILLISECONDS.sleep(wait_miliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             
             map.move_ships();
-            map.activate_static_objects();
-            map.conquer_planets_using_ships();
-            map_frame.panel.update_map_frame(map.map_area);
-
             try {
-                    TimeUnit.MILLISECONDS.sleep(600);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                TimeUnit.MILLISECONDS.sleep(wait_miliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-           // probalby there is need for a wait methods with ms
-
-       //     wait( 1, start_time);
-                        
-            // map.mine_resources();
-            // map.spawn_ships();
-            // // wait(1, start_time);
-            // System.out.println(System.lineSeparator().repeat(map_size+1));
-            // System.out.println("Ships spawning");
-            // //map.show_map();
-            // map_frame.panel.update_map_frame(map.map_area);
-
-
-            // map.move_ships();
-            // // wait(1, start_time);
-            // System.out.println(System.lineSeparator().repeat(map_size+1));
-            // System.out.println("Ships moving");
-            // //map.show_map();
-            // map_frame.panel.update_map_frame(map.map_area);
-
-
-            // start_time = Instant.now().getEpochSecond();
-            // map.conquer_planets_using_ships();
-            // //wait(1, start_time);
-            // System.out.println(System.lineSeparator().repeat(map_size+1));
-            // System.out.println("Ships conquering planets");
-            // //map.show_map();
-            // map_frame.panel.update_map_frame(map.map_area);
-        
-            // System.out.println("------------------------------------------");
+            map.activate_static_objects();
+            try {
+                TimeUnit.MILLISECONDS.sleep(wait_miliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //map.show_map();
+            map.conquer_planets_using_ships();
+            try {
+                TimeUnit.MILLISECONDS.sleep(wait_miliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            map_frame.panel.update_map_frame(map.map_area);
+            try {
+                TimeUnit.MILLISECONDS.sleep(wait_miliseconds);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            
+            //System.out.println("------------------------------------------");
         }
+        sound_player.play(false);
         System.out.println("Simulation ended");
+        
     }
-
+    
+    
     private static void make_simulation_for_script(String[] args){
         double planetation = Double.parseDouble(args[0]);
         int map_size = Integer.parseInt(args[1]);

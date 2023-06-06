@@ -10,8 +10,8 @@ public class mapPanel extends  JPanel{
     private Timer timer;
     private int interval = 100; // Update interval in milliseconds
 
-    int panel_width = 500;
-    int panel_height = 500;
+    int panel_width = 1000;
+    int panel_height = 600;
 
     emptySpace map_area[][];
     emptySpace previous_map_area[][];
@@ -74,6 +74,9 @@ public class mapPanel extends  JPanel{
 
     public void paint(Graphics g) {
 
+        if(map_area == null) {
+            return;
+        }
         Graphics2D g2D = (Graphics2D) g;
 
         
@@ -102,21 +105,26 @@ public class mapPanel extends  JPanel{
         //setting drawing connections between ships and owners 
         g2D.setStroke(new BasicStroke(1));
 
+        g2D.setFont(new Font("Tahoma", Font.PLAIN, panel_height / 50));
+                
         for(int j = 0; j < map_area.length; j++) {
             for(int i = 0; i < map_area.length; i++) {
-                
-                int x_change_in_map = 0;
-                int y_change_in_map = 0;
-                int previous_ship_x = -2; //error code
-                int previous_ship_y = -2; //error code
 
-                int x_velocity = 2;
-                int y_velocity = 2;
+                g2D.setPaint(Color.WHITE);
+
+                
+                // int x_change_in_map = 0;
+                // int y_change_in_map = 0;
+                // int previous_ship_x = -2; //error code
+                // int previous_ship_y = -2; //error code
+
+                // int x_velocity = 2;
+                // int y_velocity = 2;
 
                 pacifisticShip acc_ship = null;
 
 
-                if(map_area[i][j] == null) {
+                if(this.map_area[i][j] == null) {
                     continue;
                 }
 
@@ -152,12 +160,12 @@ public class mapPanel extends  JPanel{
                 //     }
                 // }
 
-                x_change_in_map  = i - previous_ship_x;
-                y_change_in_map  = j - previous_ship_y;
+                // x_change_in_map  = i - previous_ship_x;
+                // y_change_in_map  = j - previous_ship_y;
 
-                x_velocity = x_change_in_map * panel_width / map_area.length;
+                // x_velocity = x_change_in_map * panel_width / map_area.length;
 
-
+                
                 if(map_area[i][j] instanceof pacifisticShip) {
                     acc_ship = (pacifisticShip) map_area[i][j];
                 } 
@@ -194,15 +202,20 @@ public class mapPanel extends  JPanel{
                 if(map_area[i][j] instanceof Planet) {
 
                     Planet planet = (Planet) map_area[i][j];
-                    
-                    g2D.setColor(Color.WHITE);  
+                    g2D.setPaint(Color.WHITE);
+
                     //painting resources
                     if(planet.owner != null) {
 
                         if(planet.owner.planets_possesed_list.get(0).equals(planet)) { 
-                            g2D.drawString("Resources: " + String.valueOf(planet.owner.owned_resources) , 
+                            g2D.drawString("Resources: " , 
                             i * panel_width/map_area.length - 35,
                             j * panel_height/map_area.length);
+
+                            g2D.drawString(String.valueOf(planet.owner.owned_resources) , 
+                            i * panel_width/map_area.length - 35,
+                            j * panel_height/map_area.length + 15);
+
      
                         }
                                               
@@ -232,6 +245,8 @@ public class mapPanel extends  JPanel{
                     continue;
                 }
             }
+            g2D.setColor(Color.CYAN);
+            g2D.drawString("Shooting Stars by Bag Raiders playing",(3*(int) panel_width / 5 ) , (int) panel_height / 50 );
         }
     }
 
@@ -239,7 +254,6 @@ public class mapPanel extends  JPanel{
 
         map_area = map_area_passed;   
 
-        
         timer = new Timer(interval, e -> {
             
             repaint();
