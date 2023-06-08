@@ -7,6 +7,8 @@ import java.time.Instant;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.text.CompositeView;
+
 
 public abstract class Simulation {
     
@@ -21,9 +23,9 @@ public abstract class Simulation {
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
         //THEY DO NOT WORK ON THE SAME DATA
 
-        //make_simulation_for_script(args); //for script (uncomment if needed)
+        make_simulation_for_script(args); //for script (uncomment if needed)
 
-        show_simulation(); //for testing and showing simulation
+        // show_simulation(); //for testing and showing simulation
     }
 
     private static void wait(long seconds, long start_time) {
@@ -35,7 +37,7 @@ public abstract class Simulation {
 
     private static void show_simulation(){
         int map_size = 30;
-        Map map = new Map(0.03, map_size, 2, 3, 3, 3);
+        Map map = new Map(0.06, map_size, 2, 3, 3, 3);
         
 
         map.initialize_map();
@@ -47,9 +49,9 @@ public abstract class Simulation {
         
         // executing simulation era
         for(int i = 0; i < 500; i++) {
-            start_time = Instant.now().getEpochSecond();
+            // start_time = Instant.now().getEpochSecond();
 
-            Instant now = Instant.now();
+            // Instant now = Instant.now();
 
             map.mine_resources();
             map.spawn_ships();
@@ -111,32 +113,58 @@ public abstract class Simulation {
             Map map = new Map(planetation, map_size, stars_quantity, black_holes_quantity, aggresive_civilisation_quantity, pacifistic_civilisation_quantity);
             map.initialize_map();
 
+            //print start marker for script
+            System.out.println("-");
+
             // print planetation, map size, stars quantity, black holes quantity, aggresive civilisation quantity, pacifistic civilisation quantity, number of eras, number of repeats
             System.out.println(planetation + " " + map_size + " " + stars_quantity + " " + black_holes_quantity + " " + aggresive_civilisation_quantity + " " + pacifistic_civilisation_quantity);
-
+            
+            // print all info about particular civilization's ID's and types
+            // PART 1 OF SCRIPT OUTPUT 2
+            for (int civId = 0; civId < map.civ_list.size(); civId++) {
+                System.out.print(civId + map.civ_list.get(civId).toString() + " ");
+            }
+            System.out.println();
+            
+            Map previousMap = new Map();
             for(int j = 0; j < number_of_eras; j++) {
-                map.mine_resources();
+                
+                boolean were_resources_mined = map.mine_resources();
+                
+                // PART 2 OF SCRIPT OUTPUT 2
+                for (pacifisticCivilization civ : map.civ_list) {
+                    System.out.print(civ.owned_resources + " ");
+                }
+                System.out.println();
+                
+                
                 map.spawn_ships();
                 map.move_ships();
                 map.conquer_planets_using_ships();
                 map.activate_static_objects();
+                if(map.equals(previousMap) && were_resources_mined == false){
+                    break;
+                }
+                previousMap = map;
             }
-            for (pacifisticCivilization civilization : map.civ_list) {
-                //print all info about particular civilization at the end
-                //of each simulation
-                System.out.print(civilization.toString() + " " + civilization.owned_resources);
-                System.out.println();
-            }
-            System.out.println("-");
+            // print owned_resources from particular civilization at the end of each simulation
+            //SCRIPT OUTPUT 1
+            // for (pacifisticCivilization civilization : map.civ_list) {
+                //     System.out.print(civilization.toString() + " " + civilization.owned_resources);
+                //     System.out.println();
+                // }
+        }
+                
+        //print end marker for script
+        System.out.println("-");
 
-            /*
-             * P 99123 0.02 15 2
-             * A 12313
-             * P 21331
-             * 
-             * 0.32 15 2 4
-             * P 9213
-             */
+        /*
+        * P 99123 0.02 15 2
+        * A 12313
+        * P 21331
+        * 
+        * 0.32 15 2 4
+        * P 9213
+        */
         }
     }
-}

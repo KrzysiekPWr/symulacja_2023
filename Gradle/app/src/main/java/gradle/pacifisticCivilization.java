@@ -26,8 +26,7 @@ public class pacifisticCivilization {
     public pacifisticCivilization() {
     }
 
-    public void mine_resources_for_one_civilization()
-    {
+    public boolean mine_resources_for_one_civilization(){
         int resources_mined_in_era = 0;
             
         for(int j = 0; j < planets_possesed_list.size(); j++){
@@ -56,6 +55,10 @@ public class pacifisticCivilization {
 
         }
         owned_resources += resources_mined_in_era;
+        if(resources_mined_in_era > 0){
+            return true;
+        }
+        else return false;
     }
     
     public void setOwnedResources(int owned_resources){
