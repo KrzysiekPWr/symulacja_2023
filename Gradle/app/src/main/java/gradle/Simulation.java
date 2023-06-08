@@ -15,7 +15,9 @@ public abstract class Simulation {
     static long seconds_now;
     static long start_time;
     static long seconds_from_start;
-    static int wait_miliseconds = 200;
+    static int wait_miliseconds = 100;
+    static int continue_simulation = 1;
+    static int simulation_speed = 1;
     public static void main(String[] args) {
         
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
@@ -34,25 +36,56 @@ public abstract class Simulation {
     }
 
     private static void show_simulation(){
-        int map_size = 30;
-        Map map = new Map(0.03, map_size, 2, 3, 3, 3);
+        int map_size = 35;
+        Map map = new Map(0.025, map_size, 3, 3, 2, 4);
         
 
         map.initialize_map();
         //map.show_map();
     
-        mapGraphicsFrame map_frame = new mapGraphicsFrame();
+
+        //-----------------------------------------------
+        //Graphic and sound
+        int slider_max = 100;
+        int slider_min = 0;
+
+        mapGraphicsFrame map_frame = new mapGraphicsFrame(slider_min, slider_max);
+        
+
         soundPlayer sound_player = new soundPlayer();
         sound_player.play(true);
-        
+        //-----------------------------------------------
+
+
         // executing simulation era
-        for(int i = 0; i < 500; i++) {
+        for(int i = 0; i < 1000; i++) {
+
+           
+            
+            simulation_speed = map_frame.slider.getValue();
+            
+            if(simulation_speed == 0) {
+                
+                do {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } while (map_frame.slider.getValue() == 0);
+                
+            }
+            wait_miliseconds = 100;
+            wait_miliseconds -= simulation_speed - 1;
+
+            continue_simulation = 0;
+
             start_time = Instant.now().getEpochSecond();
 
             Instant now = Instant.now();
 
             map.mine_resources();
-            map.spawn_ships();
+            continue_simulation +=  map.spawn_ships();
             map_frame.panel.update_map_frame(map.map_area);
             try {
                 TimeUnit.MILLISECONDS.sleep(wait_miliseconds);
@@ -86,6 +119,7 @@ public abstract class Simulation {
                 e.printStackTrace();
             }
             
+          
             //System.out.println("------------------------------------------");
         }
         sound_player.play(false);
