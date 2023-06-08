@@ -172,7 +172,7 @@ class Map {
             if(i < pacifistic_civilisation_quantity){
                 
                 //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
-                pacifisticCivilization pacCiv = new pacifisticCivilization(10, 40, 7,2,2);
+                pacifisticCivilization pacCiv = new pacifisticCivilization(15, 40, 7,6,2);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -188,7 +188,7 @@ class Map {
 
             }
             else{                                                           // THESE SHOULD BE RANDOMIZED!
-                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 50, 15,2,2);
+                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 50, 15,10,2);
                 
                 civ_list.add(agrCiv);
                 Planet emptyPlanet = lifeless_planet_list.get(random_index);
@@ -202,13 +202,23 @@ class Map {
                  
     }
     
-    public void mine_resources(){ 
+    public boolean mine_resources(){ 
+
+        boolean were_resources_mined = false;
 
         for(int i = 0; i < civ_list.size(); i++) {   
-            civ_list.get(i).mine_resources_for_one_civilization();
+            if(civ_list.get(i).mine_resources_for_one_civilization()){
+                were_resources_mined = true;
+            }
         }
+        return were_resources_mined;
     }
 
+   /**
+    * Spawns ships for each civilization if it has enough resources
+    * looks through all planets possesed by civilization and spawns ship on each of them
+    * Tries to spawn ship in the left up corner of Euclidean space iterating right and down
+    */
    public void spawn_ships() {
         for (pacifisticCivilization civ : civ_list) {
             for (Planet owned_planet : civ.planets_possesed_list) {
@@ -242,7 +252,7 @@ class Map {
                                 //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
                                 //choosing index of planet to which ship will be sent based on fitness proportionate selection
                                 map_area[x][y] = new aggressiveShip(fuel, jump_cooldown, speed, x, y,
-                                owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources*100000.0, civ);
+                                owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources, civ);
                                 ship_spawned = true;
                                 civ.ship_possesed_list.add((aggressiveShip) map_area[x][y]);
                                 break;
@@ -257,7 +267,7 @@ class Map {
                             }
                         }
                         if(ship_spawned){
-                        break;
+                            break;
                         }
 
                     }
@@ -267,12 +277,11 @@ class Map {
     }
 
     /**
-     * Function that moves ships and checks if they are in range of any planet to conquer it,
-     * checks what type of civ is the owner of the planet and plays accordingly
+     * Function that moves ships. Ships get closer to their destination planet (which is randomized using Fitness proportionate selection)
+     * Checks if ship is stuck (cannot move for 3 consecutive turn) and if it is, it's rerouted to random planet from empty planet list
     */ 
     public void move_ships(){
         //write function that will move the ship closer to the closest to the destination planet
-
         for (pacifisticCivilization civ : civ_list) {
             for (int id_ship = 0; id_ship < civ.ship_possesed_list.size(); id_ship++) {
                 pacifisticShip ship = civ.ship_possesed_list.get(id_ship);
@@ -344,7 +353,13 @@ class Map {
         }
     }
 
+    /**
+     * Function that checks if ship is close enough to planet to conquer it. If ship is Aggresive, it will conquer Pacifistic planets
+     * if it's powerful enough. All ships are destroyed when they arrive at Aggresive Civiliation planet, if Pacifistic ships arrive at
+     * Pacifistic planet their destination planet is again randomized using Fitness proportionate selection and fuel is refilled.
+    */
     public void conquer_planets_using_ships(){
+
         for (pacifisticCivilization civ : civ_list) {
             for(int id_ship = 0; id_ship < civ.ship_possesed_list.size(); id_ship++){
 
@@ -361,7 +376,7 @@ class Map {
                         
                         if(ship instanceof aggressiveShip){
                             aggressiveShip aggressive_ship = (aggressiveShip) ship;
-                            if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.1){
+                            if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.7){
 
                                 //deleting ship form map and civilization
                                 map_area[ship.x_dim][ship.y_dim] = null;
@@ -369,12 +384,13 @@ class Map {
                                 //deleting ship from civilization ship_list
                                 civ.ship_possesed_list.remove(ship);
 
-                                //changing ship owner
-                                ship.destination_planet.owner = civ;
-
-
-                                ship.owner.planets_possesed_list.add(ship.destination_planet);
                                 ship.destination_planet.owner.planets_possesed_list.remove(ship.destination_planet);
+
+                                //changing planet owner
+                                ship.destination_planet.owner = civ;
+                                
+                                ship.owner.planets_possesed_list.add(ship.destination_planet);
+                                
 
                                 aggressive_ship.steal_resources(ship.destination_planet, ship.destination_planet.owner, (aggressiveCivilization) ship.owner);
                             }
@@ -384,6 +400,7 @@ class Map {
                             //if the planet is conquered by other pacifistic civilization, the ship calculates the distance to the new closest planet
                             // and sets it as its destination
                             ship.destination_planet = ship.destination_planet.closest_planets_list.get(ship.destination_planet.fitness_proportionate_selection_index());
+                            ship.fuel = civ.ship_fuel;
                         }
                     }
                     else{ //this means that the planet is lifeless, so it can be possesed by civilization
@@ -396,20 +413,6 @@ class Map {
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Function that checks if planet is conquered by civilization
-     * @param planet
-     * @param civ
-     */
-    private boolean check_if_planet_is_conquered(Planet planet, pacifisticCivilization civ){
-        if(lifeless_planet_list.contains(planet)){
-            return false;
-        }
-        else {
-            return true;
         }
     }
 

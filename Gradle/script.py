@@ -10,7 +10,7 @@ if __name__ == "__main__":
     black_holes_quantity = 2
     aggresive_civilisations_quantity = 5
     pacifistic_civilisations_quantity = 5
-    number_of_eras = 1000
+    number_of_eras = 500
     number_of_repeats = 1
 
     # check if there is enough planets for all civilisations!
@@ -26,18 +26,36 @@ if __name__ == "__main__":
     # print only line begining with "Return code:"
     split_code = return_code.splitlines()
     
-    result_for_file = ""
-    
-    for i in range(5, 6 + pacifistic_civilisations_quantity + aggresive_civilisations_quantity):
-        # print(split_code[i])
-        result_for_file += split_code[i] + "\n"
-        # subprocess.run('echo ' + split_code[i] +' >> results.txt', shell=True)
-    
-    result_for_file += "\n"
-    
-    with open("results.txt", "a") as myfile:
-        myfile.write(result_for_file)
 
-    # subprocess.run('echo ' + '\"' + result_for_file + '\"' +' >> results.txt', shell=True)
-    print(result_for_file)
-    print(call_text)
+    # code for printing results in manner like:
+    # typeOfCiv allResourcesOfCiv 
+    # ---------------------------------------------
+    #result_for_file = ""
+    # for i in range(5, 6 + pacifistic_civilisations_quantity + aggresive_civilisations_quantity):
+    #     result_for_file += split_code[i] + "\n"
+    # result_for_file += "\n"
+
+
+    # code for printing results in manner like:
+    # idOfCiv TypeOfCiv ResourcesGatheredTillThisEra
+    # ---------------------------------------------
+    result_for_file = ""
+    start = False
+    for line in split_code:
+        if(line == "-" and start == False):
+            start = True
+            continue
+        elif(line == "-" and start == True):
+            break
+
+        if(start == True):
+            result_for_file += line + "\n"
+        
+    
+    with open("results_simulation_course.txt", "a") as myfile:
+        myfile.write(result_for_file)
+        myfile.write("-------------------\n")
+        myfile.close()
+    
+    # print(return_code)
+    # print(call_text)
