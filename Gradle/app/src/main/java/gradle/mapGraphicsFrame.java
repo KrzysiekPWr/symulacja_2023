@@ -3,9 +3,7 @@ package gradle;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.Hashtable;
-
 import javax.swing.*;
 
 public class mapGraphicsFrame extends JFrame {

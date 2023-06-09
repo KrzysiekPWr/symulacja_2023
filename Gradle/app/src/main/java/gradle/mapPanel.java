@@ -135,7 +135,7 @@ public class mapPanel extends  JPanel{
                 pacifisticShip acc_ship = null;
 
 
-                if(this.map_area[i][j] == null) {
+                if(map_area[i][j] == null) {
                     continue;
                 }
 
@@ -179,15 +179,17 @@ public class mapPanel extends  JPanel{
                 
                 if(map_area[i][j] instanceof pacifisticShip) {
                     acc_ship = (pacifisticShip) map_area[i][j];
-                } 
-
-                
+                }
+                             
 
                 if (map_area[i][j].toString().equals("#")) {
                    
+                    
+                    //drawing ship image
+                    g2D.drawImage(agg_ship, i_dim_in_pixels, j_dim_in_pixels, null);
+                    
                     //drawing connection between ship and owner
                     g2D.setPaint(Color.RED);
-                    
                     g2D.drawLine(pac_ship.getWidth(null)/2 + i_dim_in_pixels, 
                     pac_ship.getHeight(null)/2 + j_dim_in_pixels, 
                     pac_ship.getWidth(null)/2 + acc_ship.owner.planets_possesed_list.get(0).x_dim * drawing_space_i_dim / map_area.length,

@@ -1,13 +1,9 @@
 package gradle;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import java.awt.*;
-import java.awt.event.*;
 
-public class simulationTimeSlider implements ChangeListener{
+public class simulationTimeSlider {
     
     JSlider slider;
 
@@ -18,12 +14,6 @@ public class simulationTimeSlider implements ChangeListener{
 
         slider.setPaintTicks(true);
         slider.setMinorTickSpacing(10);
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'stateChanged'");
     }
 
     

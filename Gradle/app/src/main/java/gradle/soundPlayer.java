@@ -5,33 +5,27 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class soundPlayer implements LineListener {
+public class soundPlayer {
 
-    boolean playCompleted;
+    private Clip audioClip;
+    private DataLine.Info info;
+    private AudioFormat format;
+    private InputStream is;
+    private AudioInputStream audioStream;
 
-    public void play(boolean turn_audio_on) {
-        
-        playCompleted = turn_audio_on;
-        try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("shooting-stars.wav");
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
+    soundPlayer() {
+         try {
+            is = getClass().getClassLoader().getResourceAsStream("shooting-stars.wav");
+            audioStream = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
 
-            AudioFormat format = audioStream.getFormat();
+            format = audioStream.getFormat();
 
-            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            info = new DataLine.Info(Clip.class, format);
 
-            Clip audioClip = (Clip) AudioSystem.getLine(info);
-
-            audioClip.addLineListener(this);
+            audioClip = (Clip) AudioSystem.getLine(info);
 
             audioClip.open(audioStream);
-
-            if(turn_audio_on == true)audioClip.start();
-            else { 
-                audioClip.stop();
-                audioClip.close();
-            }
-
+                    
         } catch (UnsupportedAudioFileException ex) {
             System.out.println("The specified audio file is not supported.");
             ex.printStackTrace();
@@ -44,19 +38,19 @@ public class soundPlayer implements LineListener {
         }
     }
 
-    /**
-     * Listens to the START and STOP events of the audio line.
-     */
-    @Override
-    public void update(LineEvent event) {
-        LineEvent.Type type = event.getType();
 
-        if (type == LineEvent.Type.START) {
-            System.out.println("Playback started.");
-
-        } else if (type == LineEvent.Type.STOP) {
-            playCompleted = true;
-            System.out.println("Playback completed.");
-        }
+    public void play(boolean turn_audio_on) {
+        
+        if(turn_audio_on == true) {
+                audioClip.start();
+                audioClip.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+            else { 
+                audioClip.stop();
+                audioClip.close();
+            }
+       
     }
+
+    
 }
