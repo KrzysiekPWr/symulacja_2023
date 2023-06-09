@@ -83,9 +83,7 @@ public class mapPanel extends  JPanel{
             return;
         }
         Graphics2D g2D = (Graphics2D) g;
-
         
-
         //Scaling the background and images to fit nicely the panel
         panel_height = this.getHeight();
         panel_width = this.getWidth();

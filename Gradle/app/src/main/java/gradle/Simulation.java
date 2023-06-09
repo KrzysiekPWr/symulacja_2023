@@ -3,6 +3,7 @@
  */
 package gradle;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public abstract class Simulation {
@@ -14,22 +15,55 @@ public abstract class Simulation {
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
         //THEY DO NOT WORK ON THE SAME DATA
 
-        make_simulation_for_script(args); //for script (uncomment if needed)
+        //make_simulation_for_script(args); //for script (uncomment if needed)
 
-        //show_simulation(); //for testing and showing simulation
+        show_simulation(); //for testing and showing simulation
     }
 
     private static void show_simulation(){
 
-        int map_size = 30;
-        Map map = new Map(0.06, map_size, 2, 3, 3, 3);
+        //int map_size = 30;
+        //Map map = new Map(0.06, map_size, 2, 3, 3, 3);
         
-        map.initialize_map();
         //map.show_map();
 
         //-----------------------------------------------
         //Graphic, panels and sound
         
+        menuSimulationFrame menu_frame = new menuSimulationFrame();
+
+        ArrayList<Double> parameters = new ArrayList<Double>();
+        do {
+            parameters = menu_frame.get_silmlation_parameters();
+
+        }while(menu_frame.start_button.isEnabled() == true);
+
+        Map map = new Map(
+        parameters.get(0).doubleValue(),
+        parameters.get(1).intValue(),
+        parameters.get(2).intValue(),
+        parameters.get(3).intValue(),
+        parameters.get(4).intValue(),
+        parameters.get(5).intValue(),
+        parameters.get(6).intValue(),
+        parameters.get(7).doubleValue(),
+        parameters.get(8).intValue(),
+        parameters.get(9).intValue(),
+        parameters.get(10).intValue(),
+        parameters.get(11).intValue(),
+        parameters.get(12).intValue(),
+        parameters.get(13).intValue(),
+        parameters.get(14).intValue(),
+        parameters.get(15).intValue(),
+        parameters.get(16).intValue(),
+        parameters.get(17).intValue(),
+        parameters.get(18).intValue(),
+        parameters.get(19).intValue(),
+        parameters.get(20).intValue(),
+        parameters.get(21).doubleValue());
+
+        map.initialize_map();
+
         mapGraphicsFrame map_frame = new mapGraphicsFrame();
         
         soundPlayer sound_player = new soundPlayer();

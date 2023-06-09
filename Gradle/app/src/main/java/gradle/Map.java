@@ -57,33 +57,42 @@ class Map {
     int aggresive_civilisation_quantity, int pacifistic_civilisation_quantity,
     int default_black_holes_sucking_range, double default_stars_power_rate,
     int default_lower_bound_of_resources_for_planets, int default_upper_bound_of_resources_for_planets,
-    int default_stars_shining_range, int default_pac_civ_mining_abilities, int default_pac_civ_ship_price,
+    int default_stars_shining_range, 
+
+    int default_pac_civ_mining_abilities, int default_pac_civ_ship_price,
     int default_pac_civ_ship_fuel, int default_pac_civ_ship_jump_cooldown, int default_pac_civ_ship_speed,
+    
     int default_agg_civ_mining_abilities, int default_agg_civ_ship_price, int default_agg_civ_ship_fuel,
     int default_agg_civ_ship_jump_cooldown, int default_agg_civ_ship_speed, double default_agg_ships_attack_power){
+        
         this.planetation = planetation;
         this.size = size;
         this.stars_quantity = stars_quantity;
         this.black_holes_quantity = black_holes_quantity;
         this.aggresive_civilisation_quantity = aggresive_civilisation_quantity;
         this.pacifistic_civilisation_quantity = pacifistic_civilisation_quantity;
+        
         this.map_area = new emptySpace[size][size];
+
         this.default_black_holes_sucking_range = default_black_holes_sucking_range;
         this.default_stars_power_rate = default_stars_power_rate;
         this.default_lower_bound_of_resources_for_planets = default_lower_bound_of_resources_for_planets;
         this.default_upper_bound_of_resources_for_planets = default_upper_bound_of_resources_for_planets;
         this.default_stars_shining_range = default_stars_shining_range;
+
         this.default_pac_civ_mining_abilities = default_pac_civ_mining_abilities;
         this.default_pac_civ_ship_price = default_pac_civ_ship_price;
         this.default_pac_civ_ship_fuel = default_pac_civ_ship_fuel;
         this.default_pac_civ_ship_jump_cooldown = default_pac_civ_ship_jump_cooldown;
         this.default_pac_civ_ship_speed = default_pac_civ_ship_speed;
+
         this.default_agg_civ_mining_abilities = default_agg_civ_mining_abilities;
         this.default_agg_civ_ship_price = default_agg_civ_ship_price;
         this.default_agg_civ_ship_fuel = default_agg_civ_ship_fuel;
         this.default_agg_civ_ship_jump_cooldown = default_agg_civ_ship_jump_cooldown;
         this.default_agg_civ_ship_speed = default_agg_civ_ship_speed;
         this.default_agg_ships_attack_power = default_agg_ships_attack_power;
+        
     }
     
 
