@@ -1,0 +1,2 @@
+What to do next:
+https://www.gemboxsoftware.com/spreadsheet-java/examples/java-create-excel-chart/301 - creating chart in excel after the simulaton is over
