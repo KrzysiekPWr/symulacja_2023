@@ -6,22 +6,43 @@ import java.util.Random;
 
 class Map {
     
-    double planetation;
-    int size;
-    int stars_quantity;
-    int black_holes_quantity;
-    int aggresive_civilisation_quantity;
-    int pacifistic_civilisation_quantity;
-    List<pacifisticCivilization> civ_list = new ArrayList<>();
-    List<pacifisticShip> ship_list = new ArrayList<>();
-    List<Planet> lifeless_planet_list = new ArrayList<>();
-    emptySpace map_area[][];
+    private double planetation;
+    private int size;
+    private int stars_quantity;
+    private int black_holes_quantity;
+    private int aggresive_civilisation_quantity;
+    private int pacifistic_civilisation_quantity;
+    public List<pacifisticCivilization> civ_list = new ArrayList<>();
+    private List<Planet> lifeless_planet_list = new ArrayList<>();
+    public emptySpace map_area[][];
+    
+    //simulation parameters default values
+    private int default_black_holes_sucking_range = 2;
+    private double default_stars_power_rate = 10.0;
+    private int default_lower_bound_of_resources_for_planets = 100;
+    private int default_upper_bound_of_resources_for_planets = 1000;
+    private int default_stars_shining_range = 2;
+    
+    //pacifistic civilization default values
+    private int default_pac_civ_mining_abilities = 15;
+    private int default_pac_civ_ship_price = 40; 
+    private int default_pac_civ_ship_fuel = 7;
+    private int default_pac_civ_ship_jump_cooldown = 4;
+    private int default_pac_civ_ship_speed = 5;
+    //aggressive civilization default values
+    private int default_agg_civ_mining_abilities = 8;
+    private int default_agg_civ_ship_price = 50; 
+    private int default_agg_civ_ship_fuel = 7;
+    private int default_agg_civ_ship_jump_cooldown = 8;
+    private int default_agg_civ_ship_speed = 5;
+    private double default_agg_ships_attack_power = 1.1;
+
 
     Map(){}
     
+    //constructor that uses default, unchanged values
     Map(double planetation, int size, int stars_quantity, int black_holes_quantity,
-    int aggresive_civilisation_quantity, int pacifistic_civilisation_quantity)
-    {
+    int aggresive_civilisation_quantity, int pacifistic_civilisation_quantity){
         this.planetation = planetation;
         this.size = size;
         this.stars_quantity = stars_quantity;
@@ -30,6 +51,41 @@ class Map {
         this.pacifistic_civilisation_quantity = pacifistic_civilisation_quantity;
         this.map_area = new emptySpace[size][size];
     }
+
+    //constructor that uses custom values
+    Map(double planetation, int size, int stars_quantity, int black_holes_quantity,
+    int aggresive_civilisation_quantity, int pacifistic_civilisation_quantity,
+    int default_black_holes_sucking_range, double default_stars_power_rate,
+    int default_lower_bound_of_resources_for_planets, int default_upper_bound_of_resources_for_planets,
+    int default_stars_shining_range, int default_pac_civ_mining_abilities, int default_pac_civ_ship_price,
+    int default_pac_civ_ship_fuel, int default_pac_civ_ship_jump_cooldown, int default_pac_civ_ship_speed,
+    int default_agg_civ_mining_abilities, int default_agg_civ_ship_price, int default_agg_civ_ship_fuel,
+    int default_agg_civ_ship_jump_cooldown, int default_agg_civ_ship_speed, double default_agg_ships_attack_power){
+        this.planetation = planetation;
+        this.size = size;
+        this.stars_quantity = stars_quantity;
+        this.black_holes_quantity = black_holes_quantity;
+        this.aggresive_civilisation_quantity = aggresive_civilisation_quantity;
+        this.pacifistic_civilisation_quantity = pacifistic_civilisation_quantity;
+        this.map_area = new emptySpace[size][size];
+        this.default_black_holes_sucking_range = default_black_holes_sucking_range;
+        this.default_stars_power_rate = default_stars_power_rate;
+        this.default_lower_bound_of_resources_for_planets = default_lower_bound_of_resources_for_planets;
+        this.default_upper_bound_of_resources_for_planets = default_upper_bound_of_resources_for_planets;
+        this.default_stars_shining_range = default_stars_shining_range;
+        this.default_pac_civ_mining_abilities = default_pac_civ_mining_abilities;
+        this.default_pac_civ_ship_price = default_pac_civ_ship_price;
+        this.default_pac_civ_ship_fuel = default_pac_civ_ship_fuel;
+        this.default_pac_civ_ship_jump_cooldown = default_pac_civ_ship_jump_cooldown;
+        this.default_pac_civ_ship_speed = default_pac_civ_ship_speed;
+        this.default_agg_civ_mining_abilities = default_agg_civ_mining_abilities;
+        this.default_agg_civ_ship_price = default_agg_civ_ship_price;
+        this.default_agg_civ_ship_fuel = default_agg_civ_ship_fuel;
+        this.default_agg_civ_ship_jump_cooldown = default_agg_civ_ship_jump_cooldown;
+        this.default_agg_civ_ship_speed = default_agg_civ_ship_speed;
+        this.default_agg_ships_attack_power = default_agg_ships_attack_power;
+    }
+    
 
     
 
@@ -67,7 +123,8 @@ class Map {
 
                 if(chance_for_planet <= (int)(planetation*100)) {
 
-                    initial_resources = rand.nextInt(100, 1000); 
+                    initial_resources = rand.nextInt(default_lower_bound_of_resources_for_planets,
+                     default_upper_bound_of_resources_for_planets); 
 
                     Planet planet = new Planet(initial_resources, x, y);
                     map_area[x][y] = planet;
@@ -134,7 +191,7 @@ class Map {
                 random_y = rand.nextInt(0, size);
             }while(map_area[random_x][random_y] != null);
             
-            blackHole black_hole = new blackHole(2);
+            blackHole black_hole = new blackHole(default_black_holes_sucking_range);
             map_area[random_x][random_y] = black_hole;
         }
     } 
@@ -151,7 +208,7 @@ class Map {
                 random_y = rand.nextInt(0, size);
             }while(map_area[random_x][random_y] != null);
             
-            Star star = new Star(1.001, 10);
+            Star star = new Star(default_stars_power_rate, default_stars_shining_range);
             map_area[random_x][random_y] = star; 
         }
     }
@@ -171,8 +228,9 @@ class Map {
             //adding planets to pacifistic civilizations first
             if(i < pacifistic_civilisation_quantity){
                 
-                //creating new pacifistic civilization                      THESE SHOULD BE RANDOMIZED!
-                pacifisticCivilization pacCiv = new pacifisticCivilization(15, 40, 7,6,2);
+                //creating new pacifistic civilization                     
+                pacifisticCivilization pacCiv = new pacifisticCivilization(default_pac_civ_mining_abilities, default_pac_civ_ship_price,
+                    default_pac_civ_ship_fuel, default_pac_civ_ship_jump_cooldown, default_pac_civ_ship_speed);
                 
                 // adding civilization to list of civilizations
                 civ_list.add(pacCiv);
@@ -187,8 +245,9 @@ class Map {
                 lifeless_planet_list.remove(random_index);
 
             }
-            else{                                                           // THESE SHOULD BE RANDOMIZED!
-                aggressiveCivilization agrCiv = new aggressiveCivilization(10, 50, 15,10,2);
+            else{                                                           
+                aggressiveCivilization agrCiv = new aggressiveCivilization(default_agg_civ_mining_abilities, default_agg_civ_ship_price,
+                    default_agg_civ_ship_fuel, default_agg_civ_ship_jump_cooldown, default_agg_civ_ship_speed);
                 
                 civ_list.add(agrCiv);
                 Planet emptyPlanet = lifeless_planet_list.get(random_index);
@@ -252,7 +311,7 @@ class Map {
                                 //IF ITS LESS PLANETS THAN 3 IT WILL THROW AN EXCEPTION!
                                 //choosing index of planet to which ship will be sent based on fitness proportionate selection
                                 map_area[x][y] = new aggressiveShip(fuel, jump_cooldown, speed, x, y,
-                                owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources, civ);
+                                owned_planet.closest_planets_list.get(owned_planet.fitness_proportionate_selection_index()), civ.owned_resources * default_agg_ships_attack_power, civ);
                                 ship_spawned = true;
                                 civ.ship_possesed_list.add((aggressiveShip) map_area[x][y]);
                                 break;
@@ -368,15 +427,23 @@ class Map {
                 double distance_to_planet = Math.sqrt(Math.pow(ship.x_dim - ship.destination_planet.x_dim, 2) + Math.pow(ship.y_dim - ship.destination_planet.y_dim, 2));
                 if(distance_to_planet < 2){
                     if(ship.destination_planet.owner instanceof aggressiveCivilization){
-                        map_area[ship.x_dim][ship.y_dim] = null;
-                        civ.ship_possesed_list.remove(ship); 
-                        //might later add fight betweent aggressive ship and aggresive civ
+                        
+                        if(ship.owner.equals(ship.destination_planet.owner)){
+                            ship.fuel = ship.owner.ship_fuel;
+                            int index_of_new_planet = ship.destination_planet.fitness_proportionate_selection_index();
+                            ship.destination_planet = ship.destination_planet.closest_planets_list.get(index_of_new_planet);
                         }
+                        else{
+                            map_area[ship.x_dim][ship.y_dim] = null;
+                            civ.ship_possesed_list.remove(ship); 
+                            //might later add fight betweent aggressive ship and aggresive civ
+                        }
+                    }
                     else if(ship.destination_planet.owner instanceof pacifisticCivilization){
                         
                         if(ship instanceof aggressiveShip){
                             aggressiveShip aggressive_ship = (aggressiveShip) ship;
-                            if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.7){
+                            if(aggressive_ship.attack_power > ship.destination_planet.owner.owned_resources*0.5){
 
                                 //deleting ship form map and civilization
                                 map_area[ship.x_dim][ship.y_dim] = null;
@@ -447,17 +514,7 @@ class Map {
                     pacifisticShip ship = (pacifisticShip) map_area[k][l];
                     ship.owner.ship_possesed_list.remove(ship);
                     map_area[k][l] = null;
-
-                } else if (map_area[k][l] instanceof Planet) { 
-
-                    // //deleting all planets ocurrences - I HOPE SO!!!
-                    // Planet planet = (Planet) map_area[k][l];
-
-                    // //NEED FOR DELETING PLANETS FROM closest_planets_list of other planets
-                    // //checking if planet is possesed by civilization
-                    // if(planet.owner != null) planet.owner.planets_possesed_list.remove(planet);
-                    // map_area[k][l] = null;
-                } 
+                }
             }
         }
           
@@ -479,7 +536,6 @@ class Map {
 
                     //checking if planet is possesed by PACIFISTIC civilization and if it is, civilizations mining abilities are increased
                     //kind of bonus for pacifistic civilizations
-                    //we need to do it ONLY ONCE, so we need to check if planet is already shined
                     if(planet.owner != null && planet.owner.is_shined == false && !(planet.owner instanceof aggressiveCivilization)) {
                         planet.owner.mining_abilities = (int) (planet.owner.mining_abilities * star.power_rate);
                         planet.owner.is_shined = true; 
@@ -488,7 +544,13 @@ class Map {
                 } 
             }
         }
-        
+    }
+
+    public boolean are_there_any_ships () {
+        for(pacifisticCivilization civ : civ_list) {
+            if(civ.ship_possesed_list.size() > 0) return true;
+        }
+        return false;
     }
 }
 

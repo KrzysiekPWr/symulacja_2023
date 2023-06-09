@@ -8,19 +8,19 @@ import java.util.concurrent.TimeUnit;
 public abstract class Simulation {
     
     static int wait_miliseconds = 100;
-    static int continue_simulation = 1;
     static int simulation_speed = 1;
     public static void main(String[] args) {
         
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
         //THEY DO NOT WORK ON THE SAME DATA
 
-        //make_simulation_for_script(args); //for script (uncomment if needed)
+        make_simulation_for_script(args); //for script (uncomment if needed)
 
-        show_simulation(); //for testing and showing simulation
+        //show_simulation(); //for testing and showing simulation
     }
 
     private static void show_simulation(){
+
         int map_size = 30;
         Map map = new Map(0.06, map_size, 2, 3, 3, 3);
         
@@ -29,18 +29,18 @@ public abstract class Simulation {
 
         //-----------------------------------------------
         //Graphic, panels and sound
-        int slider_max = 100;
-        int slider_min = 0;
-
-        mapGraphicsFrame map_frame = new mapGraphicsFrame(slider_min, slider_max);
+        
+        mapGraphicsFrame map_frame = new mapGraphicsFrame();
         
         soundPlayer sound_player = new soundPlayer();
         sound_player.play(true);
         //-----------------------------------------------
 
+        //previous map
+        Map previousMap = new Map();
 
         // executing simulation era
-        for(int i = 0; i < 1000; i++) {
+        while(true) {
             
             wait_miliseconds = 100;
             simulation_speed = map_frame.slider.getValue();
@@ -54,7 +54,7 @@ public abstract class Simulation {
                 
             }
 
-            map.mine_resources();
+            boolean were_resources_mined = map.mine_resources();
             map.spawn_ships();
             map_frame.panel.update_map_frame(map.map_area);
             sleep();
@@ -67,6 +67,12 @@ public abstract class Simulation {
             
             map.conquer_planets_using_ships();
             sleep();
+
+            if(map.equals(previousMap) && were_resources_mined == false && map.are_there_any_ships() == false) {
+    
+                break;
+            }
+            previousMap = map;
 
             map_frame.panel.update_map_frame(map.map_area);
             sleep();
@@ -84,10 +90,9 @@ public abstract class Simulation {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }    
     
-    
-    private static void make_simulation_for_script(String[] args){
+    private static void make_simulation_for_script(String[] args) {
         double planetation = Double.parseDouble(args[0]);
         int map_size = Integer.parseInt(args[1]);
         int stars_quantity = Integer.parseInt(args[2]);
@@ -97,7 +102,6 @@ public abstract class Simulation {
         int number_of_eras = Integer.parseInt(args[6]);
         int number_of_repeats = Integer.parseInt(args[7]);
 
-        
         // System.out.println(planetation, map_size, stars_quantity, black_holes_quantity,
         // aggresive_civilisation_quantity, pacifistic_civilisation_quantity);
         for (int i = 0; i < number_of_repeats; i++) {
@@ -133,7 +137,7 @@ public abstract class Simulation {
                 map.move_ships();
                 map.conquer_planets_using_ships();
                 map.activate_static_objects();
-                if(map.equals(previousMap) && were_resources_mined == false){
+                if(map.equals(previousMap) && were_resources_mined == false && map.are_there_any_ships() == false){
                     break;
                 }
                 previousMap = map;

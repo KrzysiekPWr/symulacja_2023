@@ -1,5 +1,9 @@
 import subprocess
+from openpyxl import load_workbook, Workbook
 import os
+
+wb = load_workbook(filename='results_simulation.xlsx')
+
 # This script calls gradle with the arguments passed to it.
 # gradle run --args="arg1 arg2 ... argN"
 
@@ -51,6 +55,11 @@ if __name__ == "__main__":
         if(start == True):
             result_for_file += line + "\n"
         
+    wb.create_sheet("Test")
+    ws = wb["Test"]
+    ws.append(result_for_file)
+    wb.save("results_simulation.xlsx")
+
     
     with open("results_simulation_course.txt", "a") as myfile:
         myfile.write(result_for_file)
