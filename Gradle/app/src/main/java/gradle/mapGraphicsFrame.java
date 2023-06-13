@@ -64,12 +64,13 @@ public class mapGraphicsFrame extends JFrame {
         new JLabel("Fast") );
         labelTable.put(100,
         new JLabel("Super Fast") );
-        slider.setLabelTable(labelTable);
         
         for(JLabel label : labelTable.values()){
-            label.setBackground(Color.CYAN);
+            label.setForeground(Color.CYAN);
         }
-
+        slider.setLabelTable(labelTable);
+        
+        
         //Here GUI is assembled
         settings_panel.add(audio_label_1);
         settings_panel.add(slider, BorderLayout.NORTH);
@@ -79,6 +80,8 @@ public class mapGraphicsFrame extends JFrame {
         this.add(panel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
         this.pack();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        //this.setUndecorated(true);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }

@@ -34,9 +34,10 @@ public abstract class Simulation {
 
         ArrayList<Double> parameters = new ArrayList<Double>();
         do {
-            parameters = menu_frame.get_silmlation_parameters();
-
+            sleep();
         }while(menu_frame.start_button.isEnabled() == true);
+
+        parameters = menu_frame.get_simulation_parameters();
 
         Map map = new Map(
         parameters.get(0).doubleValue(),
@@ -58,16 +59,14 @@ public abstract class Simulation {
         parameters.get(16).intValue(),
         parameters.get(17).intValue(),
         parameters.get(18).intValue(),
-        parameters.get(19).intValue(),
-        parameters.get(20).intValue(),
-        parameters.get(21).doubleValue());
+        parameters.get(19).doubleValue());
 
         map.initialize_map();
 
         mapGraphicsFrame map_frame = new mapGraphicsFrame();
         
         soundPlayer sound_player = new soundPlayer();
-        sound_player.play(true);
+        sound_player.play(1);
         //-----------------------------------------------
 
         //previous map
@@ -83,9 +82,10 @@ public abstract class Simulation {
             if(simulation_speed == 0) {
                 
                 do {
+                    sound_player.play(2);
                     sleep();
                 } while (map_frame.slider.getValue() == 0);
-                
+                sound_player.play(1);
             }
 
             boolean were_resources_mined = map.mine_resources();
@@ -113,7 +113,7 @@ public abstract class Simulation {
             
             //System.out.println("------------------------------------------");
         }
-        sound_player.play(false);
+        sound_player.play(0);
         System.out.println("Simulation ended");
         
     }

@@ -3,7 +3,7 @@ package gradle;
 
 public class pacifisticShip implements emptySpace {
     
-    int fuel; //shouldnt we move these three to civilisation class?
+    int fuel; 
     int jump_cooldown;
     int act_jump_cooldown;
     int speed;

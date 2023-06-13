@@ -1,6 +1,7 @@
 package gradle;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -30,7 +31,9 @@ public class mapPanel extends  JPanel{
     Image star;
     Image black_hole;
 
-    
+    ImageIcon pac_ship_icon;
+
+    ArrayList<Image> images = new ArrayList<Image>();
     
     mapPanel () {
 
@@ -66,15 +69,18 @@ public class mapPanel extends  JPanel{
         java.net.URL starUrl = getClass().getResource("/star.png");
         ImageIcon star_icon = new ImageIcon(starUrl);
         star = star_icon.getImage();
-        
+       
         this.setPreferredSize(new Dimension(panel_width, panel_height));
         this.setBackground(Color.black);
 
+        pac_ship = scaleImage(pac_ship, 10, 10);
+        agg_ship = scaleImage(agg_ship, 10, 10);
+        pac_planet = scaleImage(pac_planet, 10, 10);
+        agg_planet = scaleImage(agg_planet, 10, 10);
+        emp_planet = scaleImage(emp_planet, 10, 10);
+        star = scaleImage(star, 10, 10);
+        black_hole = scaleImage(black_hole, 10, 10);
         
-        
-        
-        //ImageIcon icon = new ImageIcon("map_background.png");
-       // image = new ImageIcon("map_background.png").getImage();
     }
 
     public void paint(Graphics g) {
@@ -83,15 +89,24 @@ public class mapPanel extends  JPanel{
             return;
         }
         Graphics2D g2D = (Graphics2D) g;
+
+        drawing_space_i_dim = panel_width - 200;
+        drawing_space_j_dim = panel_height;
+
+        // int scale_i = 40;
+        // int scale_j = 40;
+
+        // pac_ship_icon = new ImageIcon(pac_ship);
+        // pac_ship = pac_ship_icon.getImage();
+        // pac_ship = scaleImage(pac_ship, scale_i, scale_j);
+
+        //pac_ship = scaleImage(pac_ship, scale_i, scale_j);
+
         
         //Scaling the background and images to fit nicely the panel
         panel_height = this.getHeight();
-        panel_width = this.getWidth();
+        panel_width = this.getWidth();     
     
-
-        // int scale = panel_width / map_area.length;
-
-        
 
         // pac_ship = pac_ship.getScaledInstance(scale, scale, Image.SCALE_SMOOTH);
         // agg_ship = agg_ship.getScaledInstance(scaledWidth, scaledWidth, Image.SCALE_SMOOTH);
@@ -114,73 +129,23 @@ public class mapPanel extends  JPanel{
         for(int j = 0; j < map_area.length; j++) {
             for(int i = 0; i < map_area.length; i++) {
 
-                drawing_space_i_dim = panel_width - 200;
-                drawing_space_j_dim = panel_height;
-
                 int i_dim_in_pixels = (i * drawing_space_i_dim / map_area.length);
                 int j_dim_in_pixels = (j * drawing_space_j_dim / map_area.length);
+                
                 g2D.setPaint(Color.WHITE);
 
-                
-                // int x_change_in_map = 0;
-                // int y_change_in_map = 0;
-                // int previous_ship_x = -2; //error code
-                // int previous_ship_y = -2; //error code
-
-                // int x_velocity = 2;
-                // int y_velocity = 2;
-
                 pacifisticShip acc_ship = null;
-
-
-                if(map_area[i][j] == null) {
-                    continue;
-                }
-
-                // if(map_area[i][j] instanceof pacifisticShip && !(map_area[i][j] instanceof aggressiveShip)) {
-                //     g2D.drawImage(pac_ship, i_dim_in_pixels, j_dim_in_pixels, null);
-                //     continue;
-                // }
-                
-                // if(map_area[i][j] instanceof aggressiveShip) {
-                //     g2D.drawImage(agg_ship, i_dim_in_pixels, j_dim_in_pixels, null);
-                //     continue;
-                // } why this dont show properly ships in frame?
-                
-                //It's the wrong way to do it!
-
-                //Work in progress! Moving ships
-                // if(map_area[i][j] instanceof pacifisticShip) {
-
-                //     pacifisticShip ship = (pacifisticShip) map_area[i][j];
-
-                //     for(int k = i - 1 ; k < 2; k++) {
-                //         for(int l = j - 1; l < 2; l++) {
-
-                //             if(k < 0 || l < 0 || k >= map_area.length || l >= map_area.length) {
-                //                 continue;
-                //             }
-
-                //             if(previous_map_area[k][l].equals(ship)) {
-                //                 previous_ship_x = k;
-                //                 previous_ship_y = l;
-                //             }
-                //         }
-                //     }
-                // }
-
-                // x_change_in_map  = i - previous_ship_x;
-                // y_change_in_map  = j - previous_ship_y;
-
-                // x_velocity = x_change_in_map * panel_width / map_area.length;
 
                 
                 if(map_area[i][j] instanceof pacifisticShip) {
                     acc_ship = (pacifisticShip) map_area[i][j];
                 }
-                             
-
-                if (map_area[i][j].toString().equals("#")) {
+                
+                
+                if(map_area[i][j] == null || this.map_area[i][j] == null) {
+                    continue;
+                }              
+                else if (map_area[i][j].toString().equals("#")) {
                    
                     
                     //drawing ship image
@@ -188,16 +153,16 @@ public class mapPanel extends  JPanel{
                     
                     //drawing connection between ship and owner
                     g2D.setPaint(Color.RED);
-                    g2D.drawLine(pac_ship.getWidth(null)/2 + i_dim_in_pixels, 
-                    pac_ship.getHeight(null)/2 + j_dim_in_pixels, 
-                    pac_ship.getWidth(null)/2 + acc_ship.owner.planets_possesed_list.get(0).x_dim * drawing_space_i_dim / map_area.length,
-                    pac_ship.getHeight(null)/2 + acc_ship.owner.planets_possesed_list.get(0).y_dim * drawing_space_j_dim / map_area.length);
+                    g2D.drawLine(agg_ship.getWidth(null)/2 + i_dim_in_pixels, 
+                    agg_ship.getHeight(null)/2 + j_dim_in_pixels, 
+                    agg_ship.getWidth(null)/2 + acc_ship.owner.planets_possesed_list.get(0).x_dim * drawing_space_i_dim / map_area.length,
+                    agg_ship.getHeight(null)/2 + acc_ship.owner.planets_possesed_list.get(0).y_dim * drawing_space_j_dim / map_area.length);
 
                     //drawing ship image
                     g2D.drawImage(agg_ship, i_dim_in_pixels, j_dim_in_pixels, null);
                 
-                    continue;
-                } else if (map_area[i][j].toString().equals("~")) {
+                }
+                else if (map_area[i][j].toString().equals("~")) {
 
                     if(acc_ship.owner.planets_possesed_list.size() == 0) continue;  
                     g2D.setColor(Color.GREEN);
@@ -208,13 +173,16 @@ public class mapPanel extends  JPanel{
                     
                     //drawing ship image
                     g2D.drawImage(pac_ship, i_dim_in_pixels, j_dim_in_pixels, null);
+                } else if(map_area[i][j] instanceof Star) {
+                    g2D.drawImage(star, i_dim_in_pixels, j_dim_in_pixels, null);
+                    
+                } else if(map_area[i][j] instanceof blackHole) {
+                    g2D.drawImage(black_hole, i_dim_in_pixels, j_dim_in_pixels, null);
                     continue;
-                }
-            
-                if(map_area[i][j] instanceof Planet) {
+                }else if(map_area[i][j] instanceof Planet) {
 
                     Planet planet = (Planet) map_area[i][j];
-                    g2D.setPaint(Color.WHITE);
+                    g2D.setPaint(Color.CYAN);
 
                     //painting resources
                     if(planet.owner != null) {
@@ -228,9 +196,8 @@ public class mapPanel extends  JPanel{
                             i_dim_in_pixels - 35,
                             j_dim_in_pixels + 15);
 
-     
                         }
-                                              
+                        g2D.setColor(Color.WHITE);              
                         g2D.drawLine(emp_planet.getWidth(null)/2 + i_dim_in_pixels, 
                         emp_planet.getHeight(null)/2 + j_dim_in_pixels, 
                         emp_planet.getWidth(null)/2 + planet.owner.planets_possesed_list.get(0).x_dim * drawing_space_i_dim / map_area.length,
@@ -244,18 +211,9 @@ public class mapPanel extends  JPanel{
                     } else {
                         g2D.drawImage(emp_planet, i_dim_in_pixels, j_dim_in_pixels, null);
                     }
-                    continue;
+                    
                 }
 
-                if(map_area[i][j] instanceof Star) {
-                    g2D.drawImage(star, i_dim_in_pixels, j_dim_in_pixels, null);
-                    continue;
-                }
-
-                if(map_area[i][j] instanceof blackHole) {
-                    g2D.drawImage(black_hole, i_dim_in_pixels, j_dim_in_pixels, null);
-                    continue;
-                }
             }
             
         }
@@ -272,5 +230,9 @@ public class mapPanel extends  JPanel{
         });
         timer.start(); // Start the timer
         previous_map_area = map_area;
-    }    
+    } 
+    
+    private Image scaleImage(Image image, int width, int height) {
+        return image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+    }
 }

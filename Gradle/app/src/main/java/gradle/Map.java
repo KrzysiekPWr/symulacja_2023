@@ -27,13 +27,13 @@ class Map {
     private int default_pac_civ_mining_abilities = 15;
     private int default_pac_civ_ship_price = 40; 
     private int default_pac_civ_ship_fuel = 7;
-    private int default_pac_civ_ship_jump_cooldown = 4;
+    private int default_pac_civ_ship_jump_cooldown = 10;
     private int default_pac_civ_ship_speed = 5;
     //aggressive civilization default values
     private int default_agg_civ_mining_abilities = 8;
     private int default_agg_civ_ship_price = 50; 
     private int default_agg_civ_ship_fuel = 7;
-    private int default_agg_civ_ship_jump_cooldown = 8;
+    private int default_agg_civ_ship_jump_cooldown = 10;
     private int default_agg_civ_ship_speed = 5;
     private double default_agg_ships_attack_power = 1.1;
 
@@ -60,10 +60,10 @@ class Map {
     int default_stars_shining_range, 
 
     int default_pac_civ_mining_abilities, int default_pac_civ_ship_price,
-    int default_pac_civ_ship_fuel, int default_pac_civ_ship_jump_cooldown, int default_pac_civ_ship_speed,
+    int default_pac_civ_ship_fuel, int default_pac_civ_ship_speed,
     
     int default_agg_civ_mining_abilities, int default_agg_civ_ship_price, int default_agg_civ_ship_fuel,
-    int default_agg_civ_ship_jump_cooldown, int default_agg_civ_ship_speed, double default_agg_ships_attack_power){
+    int default_agg_civ_ship_speed, double default_agg_ships_attack_power){
         
         this.planetation = planetation;
         this.size = size;
@@ -73,7 +73,7 @@ class Map {
         this.pacifistic_civilisation_quantity = pacifistic_civilisation_quantity;
         
         this.map_area = new emptySpace[size][size];
-
+        
         this.default_black_holes_sucking_range = default_black_holes_sucking_range;
         this.default_stars_power_rate = default_stars_power_rate;
         this.default_lower_bound_of_resources_for_planets = default_lower_bound_of_resources_for_planets;
@@ -83,13 +83,11 @@ class Map {
         this.default_pac_civ_mining_abilities = default_pac_civ_mining_abilities;
         this.default_pac_civ_ship_price = default_pac_civ_ship_price;
         this.default_pac_civ_ship_fuel = default_pac_civ_ship_fuel;
-        this.default_pac_civ_ship_jump_cooldown = default_pac_civ_ship_jump_cooldown;
         this.default_pac_civ_ship_speed = default_pac_civ_ship_speed;
 
         this.default_agg_civ_mining_abilities = default_agg_civ_mining_abilities;
         this.default_agg_civ_ship_price = default_agg_civ_ship_price;
         this.default_agg_civ_ship_fuel = default_agg_civ_ship_fuel;
-        this.default_agg_civ_ship_jump_cooldown = default_agg_civ_ship_jump_cooldown;
         this.default_agg_civ_ship_speed = default_agg_civ_ship_speed;
         this.default_agg_ships_attack_power = default_agg_ships_attack_power;
         
@@ -290,6 +288,31 @@ class Map {
    public void spawn_ships() {
         for (pacifisticCivilization civ : civ_list) {
             for (Planet owned_planet : civ.planets_possesed_list) {
+
+                for(int k = 0; k < owned_planet.closest_planets_list.size(); k++) {
+                    
+                    if(owned_planet.closest_planets_list.get(k).owner != civ)continue;
+                    else {
+                        
+                        if(lifeless_planet_list.size() < 1) break;
+
+                        //taking closest empty planet ads a destionation planet
+                        int x_vector = lifeless_planet_list.get(0).x_dim - owned_planet.x_dim;
+                        int y_vector = lifeless_planet_list.get(0).y_dim - owned_planet.y_dim;
+                        Planet temp;
+                        for(int i = 1; i < lifeless_planet_list.size(); i++) {
+                            temp = lifeless_planet_list.get(i);
+                            if((temp.x_dim - owned_planet.x_dim) < x_vector && (temp.y_dim - owned_planet.y_dim) < y_vector) {
+                                x_vector = temp.x_dim - owned_planet.x_dim;
+                                y_vector = temp.y_dim - owned_planet.y_dim;
+                                owned_planet.closest_planets_list.add(temp);
+                                owned_planet.closest_planets_list.remove(k);
+                                break;
+                            }
+                        } 
+                    }
+                }
+
                 if(owned_planet.extracted_resources >= civ.ship_price) {
                     owned_planet.extracted_resources -= civ.ship_price;
                     

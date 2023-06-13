@@ -39,16 +39,19 @@ public class soundPlayer {
     }
 
 
-    public void play(boolean turn_audio_on) {
+    public void play(int turn_audio_on) {
         
-        if(turn_audio_on == true) {
+        if(turn_audio_on == 1) {
                 audioClip.start();
                 audioClip.loop(Clip.LOOP_CONTINUOUSLY);
             }
-            else { 
-                audioClip.stop();
-                audioClip.close();
-            }
+        else if (turn_audio_on == 0){ 
+            audioClip.stop();
+            audioClip.close();
+        }
+        else if (turn_audio_on == 2) {
+            audioClip.stop();
+        }
        
     }
 
