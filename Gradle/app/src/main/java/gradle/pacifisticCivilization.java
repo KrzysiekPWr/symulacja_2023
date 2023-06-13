@@ -7,19 +7,26 @@ public class pacifisticCivilization {
     int owned_resources = 0;
     int mining_abilities;
     int ship_price;
+    int ship_fuel;
+    int ship_jump_cooldown;
+    int ship_speed;
     ArrayList<Planet> planets_possesed_list = new ArrayList<>();
     ArrayList<pacifisticShip> ship_possesed_list = new ArrayList<>();
+    boolean is_shined = false;
 
-    public pacifisticCivilization(int mining_abilities, int ship_price) {
+    public pacifisticCivilization(int mining_abilities, int ship_price, int ship_fuel, 
+    int ship_jump_cooldown, int ship_speed) {
         this.mining_abilities = mining_abilities;
         this.ship_price = ship_price;
+        this.ship_fuel = ship_fuel;
+        this.ship_jump_cooldown = ship_jump_cooldown;
+        this.ship_speed = ship_speed;
     }
 
     public pacifisticCivilization() {
     }
 
-    public void mine_resources_for_one_civilization()
-    {
+    public boolean mine_resources_for_one_civilization(){
         int resources_mined_in_era = 0;
             
         for(int j = 0; j < planets_possesed_list.size(); j++){
@@ -48,25 +55,22 @@ public class pacifisticCivilization {
 
         }
         owned_resources += resources_mined_in_era;
-    } 
-
-    // public void send_ship()
-    // {   
-    //     for (int x = 0; x < map.size; x++) {
-    //         for(int y = 0; y < map.size; y++){
-                
-    //         }
-            
-    //     }
-    //     //iterating through civilisation's planets
-    //     for (Planet planet : planets_possesed_list) {
-            
-    //         if(planet.extracted_resources >= ship_price)
-    //         {   
-    //             pacifisticShip pacifistic_ship = new pacifisticShip(50, 10, 2);
-   
-    //         }
-    //     }
-    // }
+        if(resources_mined_in_era > 0){
+            return true;
+        }
+        else return false;
+    }
     
+    public void setOwnedResources(int owned_resources){
+        this.owned_resources = owned_resources;
+    }
+
+    public int getOwnedResources(){
+        return owned_resources;
+    }
+
+    @Override
+    public String toString() {
+        return "P";
+    }
 }
