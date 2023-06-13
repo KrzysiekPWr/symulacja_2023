@@ -1,19 +1,28 @@
-# symulacja_2023
-Symulacja agentowa w postaci symulacji podboju kosmosu.
+# Symulacja podboju kosmosu - Programowanie Obiektowe 2023
 
-Podstawą projektu będzie dwuwymiarowa mapa zawierająca w sobie ciała niebieskie.
-Ogólny zamysł jest taki:
-Będziemy mierzyć rozwój i parametry cywilizacji (np. kto zajął więcej planet,
-kto wydobył więcej zasobów itp.).
+Projekt został stworzony przez dwóch super ambitnych studentów, Krzysztofa i Piotra, w ramach ćwiczeń z kursu programowania obiektowego.
 
-Cywilizacje będą wydobywać zasoby z planet, które mają ich limit.
-Po wydobyciu wszystkich zasobów z danej planety, wysyła ona ostatni statek i umiera.
-Każda z planet, aktualnie zajęta przez daną cywilizację będzie
-wysyłać do przestrzeni statek (częstość zależy od aktualnego rozwoju cywilizacji), który po wleceniu w
-odpowiedni obszar innej planety:
+Podstawą projektu jest dwuwymiarowa mapa zawierająca w sobie różne ciała niebieskie:
+    - planety - posiadające losową ilośc zasobów początkowych z danego przedziału, z których cywilizacje pobierają zasoby, jeśli planeta jest w ich posiadaniu  
+    - czarne dziury - wciąga statki, które pojawiają się w jej zasięgu
+    - gwiazdy - wzmacniają parametry dla cywilizacji pacyfistycznych mnożąc ich zdolnosc wydobywania zasobów w ciągu iteracji symulacji
+
+Planety mogą być w posiadaniu jednego z dwóch rodzajów cywilizacji:
+    - pacyfistycznej - ich parametry mogą zostać wzmocnione przez gwiazdy; nie są w stanie przejąć zajętej już planety; zielone elementy w wizualizacji  
+    - agresywnej - ich statki są w stanie przejmować zajęte już planety; czerwone elementy w wizualizacji
+
+Podstawową cechą charakterystyczną dla cywilizacji w danym momencie jest ilość wydobytych przez nią zasobów. Dzięki tym zasobą jest w stanie ona się rozwijać i wysyłać statki zasiedlające nowe planety. 
+
+Przykładowymi mierzonymi parametrami jest rozwój cywilizacji rozumiany np. przez to kto zajął więcej planet,
+kto wydobył więcej zasobów, kto wysłał ile statków.
+
+//Po wydobyciu wszystkich zasobów z danej planety, wysyła ona ostatni statek i umiera.
+
+Każda z planet, aktualnie zajęta przez daną cywilizację oraz posiadająca wymaganą ilośc zasobów, wysyła do przestrzeni statek, który po wleceniu w obszar innej planety:
 1) zajmie ją gdy jest niczyja.
 2) zignoruje ją i poleci dalej gdy natrafi na zajętą planetę pacyfistyczną.
 3) zostanie zestrzelony gdy zbliży się do planety agresywnej.
+
 Myślimy, że statki powinny mieć jakiś parametr typu paliwo i po pewnym czasie dezintegrują się w
 pustce zostawiając za sobą jedynie cień dawnej świetności [*]
 (Może nawet zrobilibyśmy różne typy statków dla różnych cywilizacji: różna prędkość, zasięg)
