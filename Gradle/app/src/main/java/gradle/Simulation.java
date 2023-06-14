@@ -15,7 +15,7 @@ public abstract class Simulation {
         //ONE OF THE FOLLOWING LINES SHOULD BE COMMENTED
         //THEY DO NOT WORK ON THE SAME DATA
 
-        //make_simulation_for_script(args); //for script (uncomment if needed)
+        // make_simulation_for_script(args); //for script (uncomment if needed)
 
         show_simulation(); //for testing and showing simulation
     }
@@ -161,8 +161,11 @@ public abstract class Simulation {
                 boolean were_resources_mined = map.mine_resources();
                 
                 // PART 2 OF SCRIPT OUTPUT 2
-                for (pacifisticCivilization civ : map.civ_list) {
-                    System.out.print(civ.owned_resources + " ");
+                // for (pacifisticCivilization civ : map.civ_list) {
+                //     System.out.print(civ.owned_resources + " ");
+                // }
+                for(pacifisticCivilization civ : map.civ_list) {
+                    System.out.print(civ.ship_possesed_list.size() + " ");
                 }
                 System.out.println();
                 
@@ -182,6 +185,9 @@ public abstract class Simulation {
                 //     System.out.print(civilization.toString() + " " + civilization.owned_resources);
                 //     System.out.println();
                 // }
+                for(pacifisticCivilization civ : map.civ_list) {
+                    System.out.print(civ.planets_possesed_list.size() + " ");
+                }
         }
                 
         //print end marker for script
