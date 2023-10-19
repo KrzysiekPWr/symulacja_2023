@@ -2,6 +2,14 @@
 
 Projekt został stworzony przez dwóch pierwszorocznych studentów, Krzysztofa i Piotra, w ramach laboratorium z kursu Programowania Obiektowego.
 
+**Wideo z symulacji:**
+<p align="center">
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=u13-Jf2PLQc&ab_channel=PiotrKoronczok
+" target="_blank"><img src="http://img.youtube.com/vi/u13-Jf2PLQc/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="480" height="360" border="10" /></a>
+
+</p>
+
 Podstawą projektu jest dwuwymiarowa mapa zawierająca w sobie różne ciała niebieskie:
 planety - posiadające losową ilość zasobów początkowych z danego przedziału, z których cywilizacje pobierają zasoby, jeśli planeta jest w ich posiadaniu
 * czarne dziury - wciąga statki, które pojawiają się w jej zasięgu
